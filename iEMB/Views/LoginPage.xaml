@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="iEMB.Views.LoginPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#1a1a1a">
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="Center">
+            <Image Source="hci_logo.png" Margin="0, 0, 0, 10"/>
+            <Label Text="iEMB Login"
+                   HorizontalOptions="Center"
+                   FontSize="35"
+                   FontAttributes="Bold"
+                   TextColor="Red"
+                   Margin="0, 0, 0, 30"/> 
+            <Entry x:Name="idField" Placeholder="Student ID" Margin="60, 0, 60, 0" PlaceholderColor="#ffd3d3d3" TextColor="White" IsSpellCheckEnabled="False" ></Entry>
+            <Entry x:Name="passwordField" Placeholder="Password" Margin="60, 0, 60, 0" IsPassword="True" PlaceholderColor="#ffd3d3d3" TextColor="White" IsSpellCheckEnabled="False"></Entry>
+            <Button x:Name="loginButton" VerticalOptions="Center" Margin="60, 0, 60, 0" Text="Login" Clicked="Login"/>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                <Label Text="Remember me?" VerticalOptions="Center" TextColor="LightGray"/>
+                <CheckBox x:Name="rememberMeCheckbox" Color="Red"/>
+            </StackLayout>
+            <Label x:Name="errorMsg" Text="The Student ID or Password that you have entered is incorrect." IsVisible="False" TextColor="Red" HorizontalTextAlignment="Center"/>
+            <ActivityIndicator x:Name="loadingBar" Color="Red"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

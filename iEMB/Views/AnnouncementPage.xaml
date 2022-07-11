@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="iEMB.Views.AnnouncementPage"
+             xmlns:vm="clr-namespace:iEMB.ViewModels"
+             Title="{Binding Title}"
+             BackgroundColor="#1a1a1a">
+    
+    <ContentPage.BindingContext>
+        <vm:AnnouncementViewModel />
+    </ContentPage.BindingContext>
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="Accent">#96d1ff</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+        <Label Text="hello world!" TextColor="White"/>
+    </Grid>
+
+</ContentPage>
