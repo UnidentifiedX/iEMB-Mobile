@@ -75,17 +75,22 @@ namespace iEMB.Views
 
             try
             {
-                var sessionID = response.Cookies[0].Value;
-                var authenticationToken = response.Cookies[1].Value;
+                var sessionID = response.Cookies[1].Value;
+                var authenticationToken = response.Cookies[2].Value;
+
+                Console.WriteLine(verificationToken);
+                Console.WriteLine(sessionID);
+                Console.WriteLine(authenticationToken);
 
                 loadingBar.IsRunning = false;
-                loginButton.IsEnabled = true;
 
                 Application.Current.MainPage = new AppShell();
-                await Navigation.PushAsync(new AnnouncementPage(sessionID, authenticationToken));
+                await Navigation.PushAsync(new AnnouncementPage(verificationToken, sessionID, authenticationToken));
+
+                loginButton.IsEnabled = true;
             }
             catch
-            {   
+            {
                 loadingBar.IsRunning = false;
                 loginButton.IsEnabled = true;
                 errorMsg.IsVisible = true;

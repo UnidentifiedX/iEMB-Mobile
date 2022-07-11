@@ -98,5 +98,8 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\hci_logo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\logout_24.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

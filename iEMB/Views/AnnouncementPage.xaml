@@ -9,6 +9,10 @@
     <ContentPage.BindingContext>
         <vm:AnnouncementViewModel />
     </ContentPage.BindingContext>
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="logout_24.png" Clicked="LogoutButton_Clicked"/>
+    </ContentPage.ToolbarItems>
     
     <ContentPage.Resources>
         <ResourceDictionary>
