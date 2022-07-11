@@ -1,8 +1,14 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using iEMB.Models;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -41,7 +47,63 @@ namespace iEMB.Views
             var reader = new StreamReader(dataStream);
             var content = reader.ReadToEnd();
 
-            Console.WriteLine(content);
+            var doc = new HtmlDocument();
+            doc.LoadHtml(content);
+            var unreadMessages = doc.DocumentNode.SelectNodes("//tbody")[0].SelectNodes("tr");
+            var readMessages = doc.DocumentNode.SelectNodes("//tbody")[1].SelectNodes("tr");
+            var unreadAnnouncements = new List<Announcement>();
+            var readAnnouncements = new List<Announcement>();
+
+            await Task.Run(() =>
+            {
+                foreach (var message in unreadMessages)
+                {
+                    var data = message.SelectNodes("td");
+
+                    var announcement = new Announcement
+                    {
+                        PostDate = Regex.Replace(data[0].InnerText, @"\s+", ""),
+                        Sender = data[1].SelectSingleNode("a").Attributes["tooltip-data"].Value,
+                        Username = data[1].SelectSingleNode("a").InnerText.Trim(),
+                        Subject = data[2].SelectSingleNode("a").InnerText,
+                        Url = data[2].SelectSingleNode("a").Attributes["href"].Value,
+                        BoardID = "1024",
+                        Pid = Regex.Match(data[2].SelectSingleNode("a").Attributes["href"].Value, @"/Board/content/(\d+)").Groups[1].Value,
+                        Priority = data[3].SelectSingleNode("img").Attributes["alt"].Value,
+                        Recepients = data[4].InnerText.Trim(),
+                        ViewCount = int.Parse(Regex.Match(data[5].InnerText, @"Viewer:\s+(\d+)").Groups[1].Value),
+                        ReplyCount = int.Parse(Regex.Match(data[5].InnerText, @"Response:\s+(\d+)").Groups[1].Value),
+                        IsRead = false
+                    };
+
+                    unreadAnnouncements.Add(announcement);
+                }
+
+                foreach (var message in readMessages)
+                {
+                    var data = message.SelectNodes("td");
+
+                    var announcement = new Announcement
+                    {
+                        PostDate = Regex.Replace(data[0].InnerText, @"\s+", ""),
+                        Sender = data[1].SelectSingleNode("a").Attributes["tooltip-data"].Value,
+                        Username = data[1].SelectSingleNode("a").InnerText.Trim(),
+                        Subject = data[2].SelectSingleNode("a").InnerText,
+                        Url = data[2].SelectSingleNode("a").Attributes["href"].Value,
+                        BoardID = "1024",
+                        Pid = Regex.Match(data[2].SelectSingleNode("a").Attributes["href"].Value, @"/Board/content/(\d+)").Groups[1].Value,
+                        Priority = data[3].SelectSingleNode("img").Attributes["alt"].Value,
+                        Recepients = data[4].InnerText.Trim(),
+                        ViewCount = int.Parse(Regex.Match(data[5].InnerText, @"Viewer:\s+(\d+)").Groups[1].Value),
+                        ReplyCount = int.Parse(Regex.Match(data[5].InnerText, @"Response:\s+(\d+)").Groups[1].Value),
+                        IsRead = true
+                    };
+
+                    readAnnouncements.Add(announcement);
+                }
+            });
+
+
         }
 
         private void LogoutButton_Clicked(object sender, EventArgs e)

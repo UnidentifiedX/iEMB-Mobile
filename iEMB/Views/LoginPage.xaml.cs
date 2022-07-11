@@ -78,10 +78,6 @@ namespace iEMB.Views
                 var sessionID = response.Cookies[1].Value;
                 var authenticationToken = response.Cookies[2].Value;
 
-                Console.WriteLine(verificationToken);
-                Console.WriteLine(sessionID);
-                Console.WriteLine(authenticationToken);
-
                 loadingBar.IsRunning = false;
 
                 Application.Current.MainPage = new AppShell();
