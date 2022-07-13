@@ -5,7 +5,7 @@
              xmlns:vm="clr-namespace:iEMB.ViewModels"
              Title="{Binding Title}"
              BackgroundColor="#1a1a1a">
-    
+
     <ContentPage.BindingContext>
         <vm:AnnouncementViewModel />
     </ContentPage.BindingContext>
@@ -13,15 +13,34 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="logout_24.png" Clicked="LogoutButton_Clicked"/>
     </ContentPage.ToolbarItems>
-    
+
     <ContentPage.Resources>
         <ResourceDictionary>
             <Color x:Key="Accent">#96d1ff</Color>
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid>
-        <Label Text="hello world!" TextColor="White"/>
-    </Grid>
+    <ScrollView Padding="0" Margin="0" VerticalOptions="Start">
+        <StackLayout BindableLayout.ItemsSource="{Binding ReadAnnouncements}"
+                     Margin="10, 10, 10, 0">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate>
+                    <Frame CornerRadius="10"
+                           Padding="0">
+                        <StackLayout BackgroundColor="Black" Padding="15, 5, 15, 5">
+                            <Label Text="{Binding Subject}" TextColor="White" FontAttributes="Bold" FontSize="Medium"/>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="{Binding Username}" TextColor="White"/>
+                                <Label Text="{Binding PostDate}" TextColor="White" Padding="15, 0, 0, 0"/>
+                            </StackLayout>
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="Announcement_Tapped"/>
+                            </StackLayout.GestureRecognizers>
+                        </StackLayout>
+                    </Frame>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </StackLayout>
+    </ScrollView>
 
 </ContentPage>

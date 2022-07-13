@@ -7,7 +7,7 @@ using Xamarin.Forms;
 namespace iEMB.ViewModels
 {
     [QueryProperty(nameof(ItemId), nameof(ItemId))]
-    public class ItemDetailViewModel : BaseViewModel
+    public class AnnouncementDetailViewModel : BaseViewModel
     {
         private string itemId;
         private string text;

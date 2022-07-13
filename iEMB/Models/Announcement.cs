@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿using Xamarin.Forms;
 namespace iEMB.Models
 {
-    internal class Announcement
+    public class Announcement
     {
         public string PostDate { get; set; }
         public string Sender { get; set; }
