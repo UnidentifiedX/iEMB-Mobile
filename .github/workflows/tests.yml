@@ -17,8 +17,8 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
       - name: Install dependencies
-        run: dotnet restore ../../iEMB
+        run: dotnet restore ../../
       - name: Build
-        run: dotnet build ../../iEMB --configuration Release --no-restore
+        run: dotnet build ../../ --configuration Release --no-restore
       #- name: Test
       #  run: dotnet test ./src/Language.Tests/Language.Tests.csproj
