@@ -9,6 +9,8 @@ using System.Linq;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
+using Acr.UserDialogs;
 
 namespace iEMB.Views
 {
@@ -19,6 +21,28 @@ namespace iEMB.Views
         {
             InitializeComponent();
             BindingContext = new LoginViewModel();
+
+            LoadSavedData();
+        }
+
+        private async void LoadSavedData()
+        {
+            try
+            {
+                var id = await SecureStorage.GetAsync("userid");
+                var password = await SecureStorage.GetAsync("password");
+
+                if (id != "" && password != "")
+                {
+                    UserDialogs.Instance.Toast("Successfully loaded user data!");
+                    CheckLoginCredentials(id, password);
+                }
+            }
+            catch
+            {
+                UserDialogs.Instance.Toast("Something went wrong loading user data");
+                loginButton.IsEnabled = true;
+            }
         }
 
         private void Login(object sender, EventArgs e)
@@ -28,6 +52,9 @@ namespace iEMB.Views
 
         private async void CheckLoginCredentials(string id, string password)
         {
+            ToastConfig.DefaultPosition = ToastPosition.Bottom;
+            var rememberMe = rememberMeCheckbox.IsChecked;
+
             loginButton.IsEnabled = false;
             loadingBar.IsRunning = true;
             if (id == null || password == null)
@@ -77,6 +104,20 @@ namespace iEMB.Views
             {
                 var sessionID = response.Cookies[1].Value;
                 var authenticationToken = response.Cookies[2].Value;
+
+                if (rememberMe)
+                { 
+                    try
+                    {
+                        await SecureStorage.SetAsync("userid", id);
+                        await SecureStorage.SetAsync("password", password);
+                        UserDialogs.Instance.Toast("Saved user data!");
+                    }
+                    catch
+                    {
+                        UserDialogs.Instance.Toast("Something went wrong. Please try again later.");
+                    }
+                }
 
                 loadingBar.IsRunning = false;
 

@@ -13,6 +13,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -20,9 +21,9 @@ namespace iEMB.Views
 {
     public partial class AnnouncementPage : ContentPage
     {
-        private readonly string _verificationToken;
-        private readonly string _sessionID;
-        private readonly string _authenticationToken;
+        private string _verificationToken;
+        private string _sessionID; 
+        private string _authenticationToken;
 
         public AnnouncementPage()
         {
@@ -32,14 +33,14 @@ namespace iEMB.Views
 
         public AnnouncementPage(string verificationToken, string sessionID, string authenticationToken)
         {
+            InitializeComponent();
             _verificationToken = verificationToken;
             _sessionID = sessionID;
             _authenticationToken = authenticationToken;
-            GetAnnouncements();
-            InitializeComponent();
+            GetAnnouncements(verificationToken, sessionID, authenticationToken);
         }
 
-        private async void GetAnnouncements()
+        private async void GetAnnouncements(string verificationToken, string sessionID, string authenticationToken)
         {
             var request = (HttpWebRequest)WebRequest.Create("https://iemb.hci.edu.sg/Board/Detail/1048");
             var cookieContainer = new CookieContainer();
@@ -122,19 +123,31 @@ namespace iEMB.Views
 
         private void LoadAnnouncements(List<Announcement> readAnnouncements, List<Announcement> unreadAnnouncements)
         {
+            ReadAnnouncements.Clear();
             foreach (var announcement in unreadAnnouncements)
             {
                 ReadAnnouncements.Add(announcement);
             }
         }
 
-        private void LogoutButton_Clicked(object sender, EventArgs e)
+        private async void LogoutButton_Clicked(object sender, EventArgs e)
         {
+            try
+            {
+                await SecureStorage.SetAsync("userid", "");
+                await SecureStorage.SetAsync("password", "");
+            }
+            catch
+            {
+                
+            }
+
             Application.Current.MainPage = new LoginPage();
         }
 
         private async void Announcement_Tapped(object sender, EventArgs e)
         {
+            Console.WriteLine(_verificationToken + "amogus");
             //var announcementSender = (StackLayout)sender;
             //var pid = ((Announcement)announcementSender.BindingContext).Pid;
             //var boardID = 1024;
