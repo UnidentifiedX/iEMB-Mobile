@@ -11,7 +11,18 @@ namespace iEMB.ViewModels
 {
     public class AnnouncementViewModel : BaseViewModel
     {
-        private ObservableCollection<Announcement> _readAnnouncements;
+        private ObservableCollection<Announcement> _unreadAnnouncements;
+        public ObservableCollection<Announcement> _readAnnouncements;
+
+        public ObservableCollection<Announcement> UnreadAnnouncements
+        {
+            get { return _unreadAnnouncements; }
+            set
+            {
+                _unreadAnnouncements = value;
+            }
+        }        
+
         public ObservableCollection<Announcement> ReadAnnouncements
         {
             get { return _readAnnouncements; }
@@ -24,6 +35,7 @@ namespace iEMB.ViewModels
         public AnnouncementViewModel()
         {
             Title = "Announcements";
+            UnreadAnnouncements = AnnouncementPage.UnreadAnnouncements;
             ReadAnnouncements = AnnouncementPage.ReadAnnouncements;
         }
     }
