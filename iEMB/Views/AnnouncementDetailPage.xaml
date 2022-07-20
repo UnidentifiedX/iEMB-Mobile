@@ -1,14 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="iEMB.Views.ItemDetailPage"
+             x:Class="iEMB.Views.AnnouncementDetailPage"
+             BackgroundColor="#1a1a1a"
              Title="{Binding Title}">
 
-    <StackLayout Spacing="20" Padding="15">
-        <Label Text="Text:" FontSize="Medium" />
-        <Label Text="{Binding Text}" FontSize="Small"/>
-        <Label Text="Description:" FontSize="Medium" />
-        <Label Text="{Binding Description}" FontSize="Small"/>
+    <StackLayout Padding="15">
+        <ScrollView>
+            <StackLayout VerticalOptions="FillAndExpand">
+                <Label x:Name="subject" FontSize="Large" TextColor="White" FontAttributes="Bold"/>
+                <Label x:Name="sender" TextColor="White" Margin="0, 5, 0, 0" Padding="0" FontAttributes="Bold"/>
+                <Label x:Name="recepients" TextColor="White" Margin="0, 5, 0, 0" Padding="0" FontAttributes="Bold"/>
+                <Label x:Name="postDate" TextColor="White" Margin="0, 5, 0, 0" Padding="0" FontAttributes="Bold"/>
+                <StackLayout x:Name="announcementContent" Padding="0" Margin="0, 15, 0, 0">
+                    
+                </StackLayout>
+            </StackLayout>
+        </ScrollView>
     </StackLayout>
-    
 </ContentPage>

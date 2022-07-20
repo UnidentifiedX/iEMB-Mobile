@@ -20,27 +20,31 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <ScrollView Padding="0" Margin="0" VerticalOptions="Start">
-        <StackLayout BindableLayout.ItemsSource="{Binding ReadAnnouncements}"
-                     Margin="10, 10, 10, 0">
-            <BindableLayout.ItemTemplate>
-                <DataTemplate>
-                    <Frame CornerRadius="10"
-                           Padding="0">
-                        <StackLayout BackgroundColor="Black" Padding="15, 5, 15, 5">
-                            <Label Text="{Binding Subject}" TextColor="White" FontAttributes="Bold" FontSize="Medium"/>
-                            <StackLayout Orientation="Horizontal">
-                                <Label Text="{Binding Username}" TextColor="White"/>
-                                <Label Text="{Binding PostDate}" TextColor="White" Padding="15, 0, 0, 0"/>
-                            </StackLayout>
-                            <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="Announcement_Tapped"/>
-                            </StackLayout.GestureRecognizers>
-                        </StackLayout>
-                    </Frame>
-                </DataTemplate>
-            </BindableLayout.ItemTemplate>
-        </StackLayout>
-    </ScrollView>
+    <StackLayout>
+        <ScrollView Padding="0" Margin="10, 10, 10, 10">
+            <Grid>
+                <StackLayout BindableLayout.ItemsSource="{Binding ReadAnnouncements}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Frame CornerRadius="10"
+                                       Padding="0">
+                                <StackLayout BackgroundColor="Black" Padding="15, 5, 15, 5" MinimumHeightRequest="75">
+                                    <Label Text="{Binding Subject}" TextColor="White" FontAttributes="Bold" FontSize="Medium" VerticalOptions="CenterAndExpand"/>
+                                    <StackLayout Orientation="Horizontal" VerticalOptions="EndAndExpand" Margin="0, 0, 0, 5">
+                                        <Label Text="{Binding Username}" TextColor="White"/>
+                                        <Label Text="{Binding PostDate}" TextColor="White" Padding="15, 0, 0, 0"/>
+                                    </StackLayout>
+                                    <StackLayout.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="Announcement_Tapped"/>
+                                    </StackLayout.GestureRecognizers>
+                                </StackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
+                <Label x:Name="noUnreadAnnouncements" Text="No unread announcements. Yay!" TextColor="White" IsVisible="false" HorizontalTextAlignment="Center"/>
+            </Grid>
 
+        </ScrollView>
+    </StackLayout>
 </ContentPage>
