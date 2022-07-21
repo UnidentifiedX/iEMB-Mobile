@@ -22,11 +22,15 @@ namespace iEMB.Views
 {
     public partial class AnnouncementPage : ContentPage
     {
+        protected override void OnAppearing()
+        {
+            GetAnnouncements(LoginPage.VerificationToken, LoginPage.SessionID, LoginPage.AuthenticationToken);
+        }
 
         public AnnouncementPage()
         {
             BindingContext = new AnnouncementViewModel();
-            GetAnnouncements(LoginPage.VerificationToken, LoginPage.SessionID, LoginPage.AuthenticationToken);
+            //GetAnnouncements(LoginPage.VerificationToken, LoginPage.SessionID, LoginPage.AuthenticationToken);
             InitializeComponent();
         }
 
@@ -55,9 +59,9 @@ namespace iEMB.Views
             var unreadMessages = doc.DocumentNode.SelectNodes("//tbody")[0]?.SelectNodes("tr");
             var hasUnreadMessages = !(unreadMessages.FirstOrDefault().InnerText.Trim() == "No Record Found!");
 
-            if(!hasUnreadMessages)
+            if(hasUnreadMessages)
             {
-                noUnreadAnnouncements.IsVisible = true;
+                noUnreadAnnouncements.IsVisible = false;
             }
 
             var readMessages = doc.DocumentNode.SelectNodes("//tbody")[1].SelectNodes("tr");
@@ -161,7 +165,7 @@ namespace iEMB.Views
 
             if(((Announcement)announcementSender.BindingContext).IsRead)
             {   
-                announcement = ReadAnnouncements.Where(a => a.Pid != pid).FirstOrDefault();          
+                announcement = ReadAnnouncements.Where(a => a.Pid == pid).FirstOrDefault();          
             }
             else
             {

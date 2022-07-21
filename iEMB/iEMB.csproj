@@ -1,8 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+	<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,8 +11,9 @@
     <PackageReference Include="HtmlAgilityPack" Version="1.11.43" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="PuppeteerSharp" Version="7.1.0" />
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2196" />  
-    <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
+    <PackageReference Include="Xamarin.CommunityToolkit" Version="2.0.4" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2478" />  
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.3" />
   </ItemGroup>
 
   <ItemGroup>

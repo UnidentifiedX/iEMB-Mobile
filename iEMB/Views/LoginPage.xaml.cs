@@ -17,6 +17,10 @@ namespace iEMB.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoginPage : ContentPage
     {
+        public static string VerificationToken { get; set; }
+        public static string SessionID { get; set; }
+        public static string AuthenticationToken { get; set; }
+
         public LoginPage()
         {
             InitializeComponent();
@@ -121,8 +125,12 @@ namespace iEMB.Views
 
                 loadingBar.IsRunning = false;
 
+                VerificationToken = verificationToken;
+                SessionID = sessionID;
+                AuthenticationToken = authenticationToken;
+
                 Application.Current.MainPage = new AppShell();
-                await Navigation.PushAsync(new AnnouncementPage(verificationToken, sessionID, authenticationToken));
+                await Navigation.PushAsync(new AnnouncementPage());
 
                 loginButton.IsEnabled = true;
             }
