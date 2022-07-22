@@ -23,5 +23,8 @@
     <Compile Update="Views\AnnouncementDetailPage.xaml.cs">
       <DependentUpon>AnnouncementDetailPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\FavouritePage.xaml.cs">
+      <DependentUpon>FavouritePage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

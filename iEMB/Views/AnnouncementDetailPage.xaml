@@ -1,21 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:iEMB.ViewModels"
              x:Class="iEMB.Views.AnnouncementDetailPage"
              BackgroundColor="#1a1a1a"
              Title="{Binding Title}">
 
+    <ContentPage.BindingContext>
+        <vm:AnnouncementDetailViewModel/>
+    </ContentPage.BindingContext>
+    
     <StackLayout Padding="15">
         <ScrollView>
-            <StackLayout VerticalOptions="FillAndExpand">
-                <Label x:Name="subject" FontSize="Large" TextColor="White" FontAttributes="Bold"/>
-                <Label x:Name="sender" TextColor="White" Margin="0, 5, 0, 0" Padding="0" FontAttributes="Bold"/>
-                <Label x:Name="recepients" TextColor="White" Margin="0, 5, 0, 0" Padding="0" FontAttributes="Bold"/>
-                <Label x:Name="postDate" TextColor="White" Margin="0, 5, 0, 0" Padding="0" FontAttributes="Bold"/>
-                <StackLayout x:Name="announcementContent" Padding="0" Margin="0, 15, 0, 0" VerticalOptions="FillAndExpand">
-
+            <Grid>
+                <StackLayout>
+                    <ActivityIndicator x:Name="loadingIndicator" IsRunning="True" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Color="Red"/>
+                    <Label x:Name="loadingText" TextColor="LightGray" Text="Loading Announcement..." VerticalOptions="Center" HorizontalOptions="Center"/>
                 </StackLayout>
-            </StackLayout>
+                
+                <StackLayout VerticalOptions="FillAndExpand">
+                    <Label x:Name="subject" FontSize="Large" TextColor="White" FontAttributes="Bold"/>
+                    <Label x:Name="sender" TextColor="White" Margin="0, 5, 0, 0" Padding="0" FontAttributes="Bold"/>
+                    <Label x:Name="recepients" TextColor="White" Margin="0, 5, 0, 0" Padding="0" FontAttributes="Bold"/>
+                    <Label x:Name="postDate" TextColor="White" Margin="0, 5, 0, 0" Padding="0" FontAttributes="Bold"/>
+                    <StackLayout x:Name="announcementContent" Padding="0" Margin="0, 15, 0, 0" VerticalOptions="FillAndExpand">
+
+                    </StackLayout>
+                </StackLayout>
+            </Grid>
         </ScrollView>
     </StackLayout>
 </ContentPage>
