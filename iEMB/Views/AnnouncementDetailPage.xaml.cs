@@ -78,6 +78,18 @@ namespace iEMB.Views
 
                 var post = doc.DocumentNode.Descendants().Where(div => div.HasClass("box") && div.Id == "fontBox").First().Descendants().Where(div => div.Id == "hyplink-css-style").First().SelectSingleNode("div");
 
+                var isStarred = doc.GetElementbyId("fav").Attributes["title"].Value == "starred message";
+                if(isStarred)
+                {
+                    itemStar.IconImageSource = ImageSource.FromFile("icon_star_filled.png");
+                }
+
+                itemStar.Clicked += (s, e) =>
+                {
+                    StarAnnouncement(s, e, announcement.Pid, isStarred, verificationToken, sessionID, authenticationToken);
+                    isStarred = !isStarred;
+                };
+
                 subject.Text = announcement.Subject;
                 sender.Text = "From: " + announcement.Sender;
                 recepients.Text = "Recepients: " + announcement.Recepients;
@@ -431,6 +443,42 @@ namespace iEMB.Views
 
             announcementContent.Children.Add(label);
             FormattedString = new FormattedString();
+        }
+
+        private async void StarAnnouncement(object s, EventArgs e, string pid, bool isStarred, string verificationToken, string sessionID, string authenticationToken)
+        {
+            var boardID = 1048;
+
+            var postData = $"status={(isStarred ? 0 : 1)}&boardId={boardID}&topicid={pid}";
+            var postDataByteArray = Encoding.ASCII.GetBytes(postData);
+
+            var cookieContainer = new CookieContainer();
+            var request = (HttpWebRequest)WebRequest.Create("https://iemb.hci.edu.sg/Board/ProcessFav");
+            cookieContainer.Add(new Uri("https://iemb.hci.edu.sg/"), new Cookie("__RequestVerificationToken", verificationToken));
+            cookieContainer.Add(new Uri("https://iemb.hci.edu.sg/"), new Cookie("ASP.NET_SessionId", sessionID));
+            cookieContainer.Add(new Uri("https://iemb.hci.edu.sg/"), new Cookie("AuthenticationToken", authenticationToken));
+            request.CookieContainer = cookieContainer;
+            request.Method = "POST";
+            request.Host = "iemb.hci.edu.sg";
+            request.Referer = "https://iemb.hci.edu.sg/";
+            request.Headers.Add("Origin", "https://iemb.hci.edu.sg");
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.UserAgent = "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Mobile Safari/537.36";
+            var bodyStream = request.GetRequestStream();
+            bodyStream.Write(postDataByteArray, 0, postDataByteArray.Length);
+
+            var response = (HttpWebResponse)await request.GetResponseAsync();
+            var reader = new StreamReader(response.GetResponseStream(), Encoding.ASCII);
+            var successful = Regex.Match(reader.ReadToEnd(), @"{""IsSuccess"":(.+?)}").Groups[1].Value == "true";
+
+            if(successful)
+            {
+                itemStar.IconImageSource = ImageSource.FromFile(isStarred ? "icon_star.png" : "icon_star_filled.png");
+            }
+            else
+            {
+                UserDialogs.Instance.Toast("Unable to star message.");
+            }
         }
     }
 }

@@ -31,7 +31,7 @@
 
     <TabBar>
         <ShellContent Title="Announcements" Icon="icon_about.png" Route="AboutPage" ContentTemplate="{DataTemplate local:AnnouncementPage}" />
-        <ShellContent Title="Browse" Icon="icon_feed.png" ContentTemplate="{DataTemplate local:ItemsPage}" />
+        <ShellContent Title="Starred" Icon="icon_star.png" ContentTemplate="{DataTemplate local:FavouritePage}" />
     </TabBar>
 
     <!--

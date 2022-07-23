@@ -12,8 +12,6 @@ namespace iEMB
         {
             InitializeComponent();
             Routing.RegisterRoute(nameof(AnnouncementDetailPage), typeof(AnnouncementDetailPage));
-            Routing.RegisterRoute(nameof(NewItemPage), typeof(NewItemPage));
         }
-
     }
 }

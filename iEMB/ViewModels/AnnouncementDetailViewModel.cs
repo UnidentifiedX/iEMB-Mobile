@@ -10,7 +10,7 @@ namespace iEMB.ViewModels
     {
         public AnnouncementDetailViewModel()
         {
-            Title = "View Announcement";
+            
         }
     }
 }

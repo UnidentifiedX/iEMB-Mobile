@@ -87,6 +87,7 @@ namespace iEMB.Views
 
             var postData = $"UserName={encodedUserId}&Password={encodedPassword}&__RequestVerificationToken={encodedToken}&submitbut=Submit";
             var postDataByteArray = Encoding.ASCII.GetBytes(postData);
+
             var cookieContainer = new CookieContainer();
             request = (HttpWebRequest)WebRequest.Create("https://iemb.hci.edu.sg/home/logincheck");
             cookieContainer.Add(new Uri("https://iemb.hci.edu.sg/home/logincheck"), new Cookie("__RequestVerificationToken", verificationCookie));
