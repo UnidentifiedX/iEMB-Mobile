@@ -45,7 +45,7 @@
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
                         </StackLayout>
-                        <xct:Expander>
+                        <xct:Expander AnimationEasing="Linear" AnimationLength="1000">
                             <xct:Expander.Header>
                             <StackLayout Orientation="Horizontal">
                                 <Label Text="Read Announcements"

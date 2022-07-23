@@ -10,7 +10,7 @@
     </ContentPage.BindingContext>
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="icon_download.png"/>
+        <!--<ToolbarItem IconImageSource="icon_download.png"/>-->
         <ToolbarItem x:Name="itemStar" IconImageSource="icon_star.png"/>
     </ContentPage.ToolbarItems>
     
