@@ -63,6 +63,10 @@ namespace iEMB.Views
             {
                 noUnreadAnnouncements.IsVisible = false;
             }
+            else
+            {
+                noUnreadAnnouncements.IsVisible = true;
+            }
 
             var readMessages = doc.DocumentNode.SelectNodes("//tbody")[1].SelectNodes("tr");
             var unreadAnnouncements = new List<Announcement>();
