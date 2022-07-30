@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "iEMB": {
+      "commandName": "Project",
+      "remoteDebugEnabled": false
+    }
+  }
+}

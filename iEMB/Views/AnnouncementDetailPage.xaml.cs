@@ -45,12 +45,11 @@ namespace iEMB.Views
             var authenticationToken = LoginPage.AuthenticationToken;
 
             var cookieContainer = new CookieContainer();
-            var uri = new Uri("https://iemb.hci.edu.sg");
 
             using (var handler = new HttpClientHandler { UseCookies = false })
             using (var client = new HttpClient(handler) { BaseAddress = new Uri("https://iemb.hci.edu.sg") })
             {
-                var message = new HttpRequestMessage(HttpMethod.Get, $"https://iemb.hci.edu.sg/Board/content/{announcement.Pid}?board={boardID}&isArchived=False");
+                var message = new HttpRequestMessage(HttpMethod.Get, "https://iemb.hci.edu.sg" + announcement.Url);
                 // chinese quiz thing
                 //var message = new HttpRequestMessage(HttpMethod.Get, $"https://iemb.hci.edu.sg/Board/content/98724?board=1048&isArchived=False");
                 // LSS test information
@@ -399,14 +398,15 @@ namespace iEMB.Views
                     {
                         return new Span
                         {
-                            Text = Environment.NewLine,
+                            Text = Environment.NewLine + Environment.NewLine,
                         };
                     }
 
-                    return new Span
-                    {
-                        Text = Environment.NewLine,
-                    };
+                    //return new Span
+                    //{
+                    //    Text = Environment.NewLine,
+                    //};
+                    return new Span();
                 case "#text":
                     if (Regex.Replace(text, @"\s", "") == "") return new Span();
 

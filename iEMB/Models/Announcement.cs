@@ -13,7 +13,8 @@ namespace iEMB.Models
         public string Priority { get; set; }
         public string Recepients { get; set; }
         public int ViewCount { get; set; }
-        public int ReplyCount { get; set; }
+        public int? ReplyCount { get; set; }
         public bool IsRead { get; set; }
+        public bool IsArchived { get; set; }
     }
 }

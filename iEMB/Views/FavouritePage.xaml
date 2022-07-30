@@ -11,8 +11,39 @@
     <ContentPage.BindingContext>
         <vm:FavouriteViewModel/>
     </ContentPage.BindingContext>
-    <!--
-      x:DataType enables compiled bindings for better performance and compile time validation of binding expressions.
-      https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/data-binding/compiled-bindings
-    -->
+
+    <StackLayout>
+        <ScrollView Padding="0" Margin="10, 10, 10, 10">
+            <Grid>
+                <StackLayout>
+                    <ActivityIndicator x:Name="loadingIndicator" IsRunning="True" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Color="Red"/>
+                    <Label x:Name="loadingText" TextColor="LightGray" Text="Loading Starred Messages..." VerticalOptions="Center" HorizontalOptions="Center"/>
+                </StackLayout>
+                <StackLayout>
+                    <StackLayout>
+                        <StackLayout BindableLayout.ItemsSource="{Binding StarredAnnouncements}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame CornerRadius="10"
+                                                   Padding="0">
+                                        <StackLayout BackgroundColor="Black" Padding="15, 5, 15, 5" MinimumHeightRequest="75">
+                                            <Label Text="{Binding Subject}" TextColor="White" FontAttributes="Bold" FontSize="Medium" VerticalOptions="CenterAndExpand"/>
+                                            <StackLayout Orientation="Horizontal" VerticalOptions="EndAndExpand" Margin="0, 0, 0, 5">
+                                                <Label Text="{Binding Sender}" TextColor="White"/>
+                                                <Label Text="{Binding PostDate}" TextColor="White" Padding="15, 0, 0, 0"/>
+                                            </StackLayout>
+                                            <StackLayout.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="Announcement_Tapped"/>
+                                            </StackLayout.GestureRecognizers>
+                                        </StackLayout>
+                                    </Frame>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </StackLayout>
+                    </StackLayout>
+                </StackLayout>
+            </Grid>
+
+        </ScrollView>
+    </StackLayout>
 </ContentPage>

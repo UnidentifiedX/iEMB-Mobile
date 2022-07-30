@@ -10,10 +10,21 @@ namespace iEMB.ViewModels
 {
     public class FavouriteViewModel : BaseViewModel
     {
+        public ObservableCollection<Announcement> _starredAnnouncements;
+
+        public ObservableCollection<Announcement> StarredAnnouncements
+        {
+            get { return _starredAnnouncements; }
+            set
+            {
+                _starredAnnouncements = value;
+            }
+        }
 
         public FavouriteViewModel()
         {
             Title = "Starred Messages";
+            StarredAnnouncements = FavouritePage.StarredAnnouncements;
         }
     }
 }

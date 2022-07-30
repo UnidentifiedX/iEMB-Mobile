@@ -3,8 +3,10 @@ using iEMB.Models;
 using iEMB.ViewModels;
 using iEMB.Views;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -31,14 +33,51 @@ namespace iEMB.Views
 
         private async void GetStarredAnnouncements(string verificationToken, string sessionID, string authenticationToken)
         {
-            var starredData = await GetPageData(verificationToken, sessionID, authenticationToken, 1048, 1);
+            var starredData = await GetPageData(verificationToken, sessionID, authenticationToken, boardID: 1048, pageNumber: 1);
 
             if(starredData == null)
             {
                 UserDialogs.Instance.Toast("Unable to fetch starred announcements.");
+                return;
             }
 
-            Console.WriteLine(starredData);
+            var json = JObject.Parse(starredData);
+            var announcementJson = json["data"]; 
+            var announcementList = new List<Announcement>();
+            
+            foreach (var announcement in announcementJson)
+            {
+                announcementList.Add(new Announcement
+                {
+                    PostDate = announcement["posttime"].ToString(),
+                    Sender = announcement["postby"].ToString(),
+                    Username = null,
+                    Subject = announcement["title"].ToString(),
+                    Url = $"/Board/Content/{announcement["id"]}?board={announcement["boardId"]}&isArchived={announcement["isArchived"]}",
+                    BoardID = announcement["boardId"].ToString(),
+                    Pid = announcement["id"].ToString(),
+                    Priority = null,
+                    Recepients = announcement["groupName"].ToString(),
+                    ViewCount = int.Parse(announcement["viewer"].ToString()),
+                    ReplyCount = null,
+                    IsRead = true,
+                    IsArchived = announcement["isArchived"].ToString() == "True",
+                });
+            }
+
+            LoadAnnouncements(announcementList);
+        }
+
+        public static ObservableCollection<Announcement> StarredAnnouncements = new ObservableCollection<Announcement>();
+
+        private void LoadAnnouncements(List<Announcement> starredAnnouncements)
+        {
+            StarredAnnouncements.Clear();
+
+            foreach (var announcement in starredAnnouncements)
+            {
+                StarredAnnouncements.Add(announcement);
+            }
         }
 
         private static async Task<string> GetPageData(string verificationToken, string sessionID, string authenticationToken, int boardID, int pageNumber)
@@ -65,14 +104,23 @@ namespace iEMB.Views
 
 
                 var response = (HttpWebResponse)await request.GetResponseAsync();
-                var reader = new StreamReader(response.GetResponseStream(), Encoding.ASCII);
+                var reader = new StreamReader(response.GetResponseStream());
 
-                return reader.ReadToEnd();
+                return WebUtility.HtmlDecode(reader.ReadToEnd());
             } 
             catch
             {
                 return null;
             }
+        }
+
+        private async void Announcement_Tapped(object sender, EventArgs e)
+        {
+            var announcementSender = (StackLayout)sender;
+            var pid = ((Announcement)announcementSender.BindingContext).Pid;
+            var announcement = StarredAnnouncements.Where(a => a.Pid == pid).FirstOrDefault();
+
+            await Navigation.PushAsync(new AnnouncementDetailPage(announcement));
         }
     }
 }
