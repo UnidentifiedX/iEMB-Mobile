@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iEMB.Android", "iEMB.Androi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iEMB.iOS", "iEMB.iOS\iEMB.iOS.csproj", "{CCE56D0E-3AD9-491C-A179-0E208B163E5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iEMB", "iEMB\iEMB.csproj", "{B9AA8718-D74E-4A36-B56D-937129E26E6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iEMB", "iEMB\iEMB.csproj", "{B9AA8718-D74E-4A36-B56D-937129E26E6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

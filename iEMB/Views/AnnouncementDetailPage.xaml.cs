@@ -6,6 +6,7 @@ using System;
 using System.Buffers.Text;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -43,6 +44,9 @@ namespace iEMB.Views
             var sessionID = LoginPage.SessionID;
             var authenticationToken = LoginPage.AuthenticationToken;
 
+            var cookieContainer = new CookieContainer();
+            var uri = new Uri("https://iemb.hci.edu.sg");
+
             using (var handler = new HttpClientHandler { UseCookies = false })
             using (var client = new HttpClient(handler) { BaseAddress = new Uri("https://iemb.hci.edu.sg") })
             {
@@ -79,7 +83,7 @@ namespace iEMB.Views
                 var post = doc.DocumentNode.Descendants().Where(div => div.HasClass("box") && div.Id == "fontBox").First().Descendants().Where(div => div.Id == "hyplink-css-style").First().SelectSingleNode("div");
 
                 var isStarred = doc.GetElementbyId("fav").Attributes["title"].Value == "starred message";
-                if(isStarred)
+                if (isStarred)
                 {
                     itemStar.IconImageSource = ImageSource.FromFile("icon_star_filled.png");
                 }
@@ -244,6 +248,7 @@ namespace iEMB.Views
                             case "i":
                             case "u":
                             case "strong":
+                            case "span":
                             case "#text":
                                 AddSpan(ParseFormattedText(node, NodeType.none));
                                 break;
@@ -257,8 +262,6 @@ namespace iEMB.Views
                     Console.WriteLine(ex.ToString());
                 }
 
-
-
                 // Insert any remaining formatted strings, if any
                 InsertFormattedString();
             }
@@ -268,8 +271,6 @@ namespace iEMB.Views
         {
             var text = WebUtility.HtmlDecode(node.InnerText);
             var previous = FormattedString.Spans.LastOrDefault();
-            //if (previous != null) Console.WriteLine(previous.Text);
-            //Console.WriteLine(node.);
 
             switch (nodeType)
             {
@@ -389,25 +390,26 @@ namespace iEMB.Views
                         Text = Environment.NewLine,
                     };
                 case "p":
-                    //if(Regex.IsMatch(text, @"\s"))
-                    //{
-                    //    return new Span()
-                    //    {
-                    //        Text = Environment.NewLine,
-                    //    };
-                    //}
                     return new Span()
+                    {
+                        Text = Environment.NewLine,
+                    };
+                case "span":
+                    if(Regex.Replace(text, @"\s", "") == "")
+                    {
+                        return new Span
+                        {
+                            Text = Environment.NewLine,
+                        };
+                    }
+
+                    return new Span
                     {
                         Text = Environment.NewLine,
                     };
                 case "#text":
                     if (Regex.Replace(text, @"\s", "") == "") return new Span();
 
-                    // If the current text starts with the previous span, the previous span will be removed from the current text
-                    //if (previous?.Text != null && text.StartsWith(previous.Text))
-                    //{
-                    //    text = text.Remove(0, previous.Text.Length);
-                    //}
                     if (node.Ancestors("strong").Count() != 0) return new Span();
                     if (node.Ancestors("b").Count() != 0) return new Span();
                     if (node.Ancestors("u").Count() != 0) return new Span();
@@ -471,7 +473,7 @@ namespace iEMB.Views
             var reader = new StreamReader(response.GetResponseStream(), Encoding.ASCII);
             var successful = Regex.Match(reader.ReadToEnd(), @"{""IsSuccess"":(.+?)}").Groups[1].Value == "true";
 
-            if(successful)
+            if (successful)
             {
                 itemStar.IconImageSource = ImageSource.FromFile(isStarred ? "icon_star.png" : "icon_star_filled.png");
             }
