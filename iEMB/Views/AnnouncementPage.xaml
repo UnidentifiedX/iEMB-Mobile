@@ -12,7 +12,7 @@
     </ContentPage.BindingContext>
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="logout_24.png" Clicked="LogoutButton_Clicked"/>
+        <ToolbarItem IconImageSource="icon_logout.png" Clicked="LogoutButton_Clicked"/>
     </ContentPage.ToolbarItems>
 
     <ContentPage.Resources>
