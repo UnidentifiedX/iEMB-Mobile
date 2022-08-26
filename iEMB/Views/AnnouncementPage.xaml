@@ -34,8 +34,10 @@
                                     <StackLayout BackgroundColor="Black" Padding="15, 5, 15, 5" MinimumHeightRequest="75">
                                         <Label Text="{Binding Subject}" TextColor="White" FontAttributes="Bold" FontSize="Medium" VerticalOptions="CenterAndExpand"/>
                                         <StackLayout Orientation="Horizontal" VerticalOptions="EndAndExpand" Margin="0, 0, 0, 5">
+                                            <Image Source="icon_calendar_user.png"/>
                                             <Label Text="{Binding Username}" TextColor="White"/>
-                                            <Label Text="{Binding PostDate}" TextColor="White" Padding="15, 0, 0, 0"/>
+                                            <Image Source="icon_calendar.png" Margin="15, 0, 0, 0"/>
+                                            <Label Text="{Binding PostDate}" TextColor="White"/>
                                         </StackLayout>
                                         <StackLayout.GestureRecognizers>
                                             <TapGestureRecognizer Tapped="Announcement_Tapped"/>
@@ -75,8 +77,10 @@
                                         <StackLayout BackgroundColor="Black" Padding="15, 5, 15, 5" MinimumHeightRequest="75">
                                             <Label Text="{Binding Subject}" TextColor="White" FontAttributes="Bold" FontSize="Medium" VerticalOptions="CenterAndExpand"/>
                                             <StackLayout Orientation="Horizontal" VerticalOptions="EndAndExpand" Margin="0, 0, 0, 5">
+                                                <Image Source="icon_calendar_user.png"/>
                                                 <Label Text="{Binding Username}" TextColor="White"/>
-                                                <Label Text="{Binding PostDate}" TextColor="White" Padding="15, 0, 0, 0"/>
+                                                <Image Source="icon_calendar.png" Margin="15, 0, 0, 0"/>
+                                                <Label Text="{Binding PostDate}" TextColor="White"/>
                                             </StackLayout>
                                             <StackLayout.GestureRecognizers>
                                                 <TapGestureRecognizer Tapped="Announcement_Tapped"/>

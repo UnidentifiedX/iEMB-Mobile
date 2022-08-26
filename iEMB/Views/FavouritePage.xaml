@@ -15,7 +15,7 @@
     <StackLayout>
         <ScrollView Padding="0" Margin="10, 10, 10, 10">
             <Grid>
-                <StackLayout>
+                <StackLayout x:Name="loadingIcons">
                     <ActivityIndicator x:Name="loadingIndicator" IsRunning="True" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Color="Red"/>
                     <Label x:Name="loadingText" TextColor="LightGray" Text="Loading Starred Messages..." VerticalOptions="Center" HorizontalOptions="Center"/>
                 </StackLayout>
@@ -29,8 +29,10 @@
                                         <StackLayout BackgroundColor="Black" Padding="15, 5, 15, 5" MinimumHeightRequest="75">
                                             <Label Text="{Binding Subject}" TextColor="White" FontAttributes="Bold" FontSize="Medium" VerticalOptions="CenterAndExpand"/>
                                             <StackLayout Orientation="Horizontal" VerticalOptions="EndAndExpand" Margin="0, 0, 0, 5">
+                                                <Image Source="icon_calendar_user.png"/>
                                                 <Label Text="{Binding Sender}" TextColor="White"/>
-                                                <Label Text="{Binding PostDate}" TextColor="White" Padding="15, 0, 0, 0"/>
+                                                <Image Source="icon_calendar.png" Margin="15, 0, 0, 0"/>
+                                                <Label Text="{Binding PostDate}" TextColor="White"/>
                                             </StackLayout>
                                             <StackLayout.GestureRecognizers>
                                                 <TapGestureRecognizer Tapped="Announcement_Tapped"/>
@@ -40,10 +42,14 @@
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
                         </StackLayout>
+                        <!--<StackLayout x:Name="pageIndex" Orientation="Horizontal" IsVisible="false" Margin="0, 20, 0, 20" HorizontalOptions="CenterAndExpand">
+                            <Button Text="" WidthRequest="40" HeightRequest="40" CornerRadius="100" Margin="0, 0, 10, 0"/>
+                            <Button Text="" WidthRequest="40" HeightRequest="40" CornerRadius="100" Margin="0, 0, 10, 0"/>
+                            <Button Text="" WidthRequest="40" HeightRequest="40" CornerRadius="100"/>
+                        </StackLayout>-->
                     </StackLayout>
                 </StackLayout>
             </Grid>
-
         </ScrollView>
     </StackLayout>
 </ContentPage>

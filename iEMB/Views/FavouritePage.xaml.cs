@@ -65,6 +65,7 @@ namespace iEMB.Views
                 });
             }
 
+            Console.WriteLine(json["paging"]["TotalPage"]);
             LoadAnnouncements(announcementList);
         }
 
@@ -78,6 +79,9 @@ namespace iEMB.Views
             {
                 StarredAnnouncements.Add(announcement);
             }
+
+            loadingIcons.IsVisible = false;
+            //pageIndex.IsVisible = true;
         }
 
         private static async Task<string> GetPageData(string verificationToken, string sessionID, string authenticationToken, int boardID, int pageNumber)
