@@ -20,9 +20,12 @@ namespace iEMB.Views
 {
     public partial class FavouritePage : ContentPage
     {
+        private static readonly int maxPageButtonCount = 5;
+        private static int currentSelectedPage = 1;
+
         protected override void OnAppearing()
         {
-            GetStarredAnnouncements(LoginPage.VerificationToken, LoginPage.SessionID, LoginPage.AuthenticationToken);
+            GetStarredAnnouncements(LoginPage.VerificationToken, LoginPage.SessionID, LoginPage.AuthenticationToken, pageNumber: 1);
         }
 
         public FavouritePage()
@@ -31,9 +34,9 @@ namespace iEMB.Views
             BindingContext = new FavouriteViewModel();
         }
 
-        private async void GetStarredAnnouncements(string verificationToken, string sessionID, string authenticationToken)
+        private async void GetStarredAnnouncements(string verificationToken, string sessionID, string authenticationToken, int pageNumber)
         {
-            var starredData = await GetPageData(verificationToken, sessionID, authenticationToken, boardID: 1048, pageNumber: 1);
+            var starredData = await GetPageData(verificationToken, sessionID, authenticationToken, boardID: 1048, pageNumber: pageNumber);
 
             if(starredData == null)
             {
@@ -65,8 +68,9 @@ namespace iEMB.Views
                 });
             }
 
-            Console.WriteLine(json["paging"]["TotalPage"]);
             LoadAnnouncements(announcementList);
+            Console.WriteLine(json["paging"]["TotalPage"].ToString() + " balls");
+            LoadPageIcons(int.Parse(json["paging"]["TotalPage"].ToString()));
         }
 
         public static ObservableCollection<Announcement> StarredAnnouncements = new ObservableCollection<Announcement>();
@@ -81,7 +85,71 @@ namespace iEMB.Views
             }
 
             loadingIcons.IsVisible = false;
-            //pageIndex.IsVisible = true;
+        }
+
+        private void LoadPageIcons(int totalPages)
+        {
+            pageIndex.Children.Clear();
+            pageIndex.IsVisible = true;
+
+            if (totalPages <= maxPageButtonCount)
+            {
+                for(int i = 1; i <= totalPages; i++)
+                {
+                    pageIndex.Children.Add(
+                            CreatePageButton(text: i.ToString(), marginRight: totalPages % maxPageButtonCount != 0 ? 10 : 0, backgroundColor: i == currentSelectedPage ? Color.Red : Color.Transparent)
+                        );
+                }
+            }
+            else
+            {
+                for(int i = 1; i <= maxPageButtonCount; i++)
+                {
+                    pageIndex.Children.Add(
+                            CreatePageButton(text: i.ToString(), marginRight: totalPages % maxPageButtonCount != 0 ? 10 : 0, backgroundColor: i == currentSelectedPage ? Color.Red : Color.Transparent)
+                        );
+                }
+
+                pageIndex.Children.Add(
+                        new Label
+                        {
+                            Text = "...",
+                            TextColor = Color.White,
+                            Padding = new Thickness(0, 10, 0, 0),
+                        }
+                    );
+
+                pageIndex.Children.Add(
+                    CreatePageButton(text: totalPages.ToString(), marginRight: totalPages % maxPageButtonCount != 0 ? 10 : 0, backgroundColor: currentSelectedPage == totalPages ? Color.Red : Color.Transparent)
+                );
+            }
+        }
+
+        private Button CreatePageButton(string text, int marginRight, Color backgroundColor)
+        {
+            var button = new Button
+            {
+                Text = text,
+                WidthRequest = 40,
+                HeightRequest = 40,
+                CornerRadius = 100,
+                Margin = new Thickness(0, 0, marginRight, 0),
+                BackgroundColor = backgroundColor,
+            };
+
+            button.Clicked += (s, e) =>
+            {
+                StarredAnnouncements.Clear();
+
+                var clickedPage = int.Parse(((Button)s).Text);
+                currentSelectedPage = clickedPage;
+                loadingIcons.IsVisible = true;
+                pageIndex.IsVisible = false;
+
+                GetStarredAnnouncements(LoginPage.VerificationToken, LoginPage.SessionID, LoginPage.AuthenticationToken, pageNumber: clickedPage);
+            };
+
+            return button;
         }
 
         private static async Task<string> GetPageData(string verificationToken, string sessionID, string authenticationToken, int boardID, int pageNumber)

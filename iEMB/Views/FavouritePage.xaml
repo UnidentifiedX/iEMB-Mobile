@@ -42,11 +42,8 @@
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
                         </StackLayout>
-                        <!--<StackLayout x:Name="pageIndex" Orientation="Horizontal" IsVisible="false" Margin="0, 20, 0, 20" HorizontalOptions="CenterAndExpand">
-                            <Button Text="" WidthRequest="40" HeightRequest="40" CornerRadius="100" Margin="0, 0, 10, 0"/>
-                            <Button Text="" WidthRequest="40" HeightRequest="40" CornerRadius="100" Margin="0, 0, 10, 0"/>
-                            <Button Text="" WidthRequest="40" HeightRequest="40" CornerRadius="100"/>
-                        </StackLayout>-->
+                        <StackLayout x:Name="pageIndex" Orientation="Horizontal" IsVisible="false" Margin="0, 20, 0, 20" HorizontalOptions="CenterAndExpand">
+                        </StackLayout>
                     </StackLayout>
                 </StackLayout>
             </Grid>
