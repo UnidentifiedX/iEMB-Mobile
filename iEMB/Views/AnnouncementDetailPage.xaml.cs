@@ -265,7 +265,7 @@ namespace iEMB.Views
 
                 // Insert any remaining formatted strings, if any
                 InsertFormattedString();
-                LoadAttatchments(contentString);
+                LoadAttachments(contentString);
             }
         }
 
@@ -450,7 +450,7 @@ namespace iEMB.Views
             FormattedString = new FormattedString();
         }
 
-        private void LoadAttatchments(string content)
+        private void LoadAttachments(string content)
         {
             var matches = Regex.Matches(content, @"addConfirmedChild\('(.*?)','(.*?)','(.*?)',(.*?),(.*?),(.*?)\)");
             foreach (Match match in matches)
@@ -489,8 +489,8 @@ namespace iEMB.Views
                     TextColor = Color.White,
                 });
 
-                var attatchmentTappedGestureRecognizer = new TapGestureRecognizer();
-                attatchmentTappedGestureRecognizer.Tapped += async (s, e) =>
+                var attachmentTappedGestureRecognizer = new TapGestureRecognizer();
+                attachmentTappedGestureRecognizer.Tapped += async (s, e) =>
                 {
                     using (var handler = new HttpClientHandler { UseCookies = false })
                     using (var client = new HttpClient(handler) { BaseAddress = new Uri("https://iemb.hci.edu.sg") })
@@ -517,15 +517,15 @@ namespace iEMB.Views
                         }
                         catch
                         {
-                            UserDialogs.Instance.Toast("Something went wrong downloading the attatchment");
+                            UserDialogs.Instance.Toast("Something went wrong downloading the attachment");
                         }
                     }
                 };
 
                 buttonFrame.Content = imageTextStacklayout;
-                buttonFrame.GestureRecognizers.Add(attatchmentTappedGestureRecognizer);
+                buttonFrame.GestureRecognizers.Add(attachmentTappedGestureRecognizer);
 
-                attatchmentButtons.Children.Add(buttonFrame);
+                attachmentButtons.Children.Add(buttonFrame);
             }
         }
 
