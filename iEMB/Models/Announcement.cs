@@ -16,5 +16,6 @@ namespace iEMB.Models
         public int? ReplyCount { get; set; }
         public bool IsRead { get; set; }
         public bool IsArchived { get; set; }
+        public bool HasAttatchments { get; set; }
     }
 }

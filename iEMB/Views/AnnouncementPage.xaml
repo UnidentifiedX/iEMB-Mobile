@@ -38,6 +38,7 @@
                                             <Label Text="{Binding Username}" TextColor="White"/>
                                             <Image Source="icon_calendar.png" Margin="15, 0, 0, 0"/>
                                             <Label Text="{Binding PostDate}" TextColor="White"/>
+                                            <Image Source="icon_attachment.png" Margin="15, 0, 0, 0" IsVisible="{Binding HasAttatchments}"/>
                                         </StackLayout>
                                         <StackLayout.GestureRecognizers>
                                             <TapGestureRecognizer Tapped="Announcement_Tapped"/>
@@ -81,6 +82,7 @@
                                                 <Label Text="{Binding Username}" TextColor="White"/>
                                                 <Image Source="icon_calendar.png" Margin="15, 0, 0, 0"/>
                                                 <Label Text="{Binding PostDate}" TextColor="White"/>
+                                                <Image Source="icon_attachment.png" Margin="15, 0, 0, 0" IsVisible="{Binding HasAttatchments}"/>
                                             </StackLayout>
                                             <StackLayout.GestureRecognizers>
                                                 <TapGestureRecognizer Tapped="Announcement_Tapped"/>

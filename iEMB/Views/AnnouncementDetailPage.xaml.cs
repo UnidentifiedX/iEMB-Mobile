@@ -510,7 +510,6 @@ namespace iEMB.Views
                             var path = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments);
                             var folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Documents", "temp");
                             var filePath = Path.Combine(Directory.GetCurrentDirectory(), $"/storage/emulated/0/Download/{fileName}");
-                            Console.WriteLine(filePath);
 
                             File.WriteAllBytes(filePath, fileByteArray);
                             UserDialogs.Instance.Toast($"Successfully downloaded {fileName}!");

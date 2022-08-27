@@ -93,7 +93,8 @@ namespace iEMB.Views
                             Recepients = Regex.Replace(data[4].InnerText.Trim(), @"\s", " ").Trim(),
                             ViewCount = int.Parse(Regex.Match(data[5].InnerText, @"Viewer:\s+(\d+)").Groups[1].Value),
                             ReplyCount = int.Parse(Regex.Match(data[5].InnerText, @"Response:\s+(\d+)").Groups[1].Value),
-                            IsRead = false
+                            IsRead = false,
+                            HasAttatchments = data[2].SelectSingleNode("i") != null
                         };
 
                         unreadAnnouncements.Add(announcement);
@@ -117,7 +118,8 @@ namespace iEMB.Views
                         Recepients = Regex.Replace(data[4].InnerText.Trim(), @"\s", " ").Trim(),
                         ViewCount = int.Parse(Regex.Match(data[5].InnerText, @"Viewer:\s+(\d+)").Groups[1].Value),
                         ReplyCount = int.Parse(Regex.Match(data[5].InnerText, @"Response:\s+(\d+)").Groups[1].Value),
-                        IsRead = true
+                        IsRead = true,
+                        HasAttatchments = data[2].SelectSingleNode("i") != null,
                     };
 
                     readAnnouncements.Add(announcement);

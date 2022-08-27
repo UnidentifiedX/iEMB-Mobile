@@ -78,8 +78,7 @@ namespace iEMB.Views
             var content = reader.ReadToEnd();
 
             var verificationCookie = response.Cookies[1].Value;
-            var verificationToken = Regex.Match(content, @"(?<=<input name=""__RequestVerificationToken"" type="".+?"" value="").*").Value;
-            verificationToken = verificationToken.Substring(0, verificationToken.Length - 5);
+            var verificationToken = Regex.Match(content, @"<input name=""__RequestVerificationToken"" .+? value=""(.+?)""").Groups[1].Value;
 
             var encodedUserId = Uri.EscapeDataString(id);
             var encodedPassword = Uri.EscapeDataString(password);
