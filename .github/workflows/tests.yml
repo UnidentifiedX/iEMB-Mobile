@@ -19,7 +19,7 @@ jobs:
         dotnet-version: '5.0.x'
 
     - name: Install dependencies
-      run: nuget restore <sln_file_path>
+      run: nuget restore ../../
 
     - name: Build
-      run: msbuild <csproj_file_path> /t:PackageForAndroid /p:Configuration=Debug
+      run: msbuild ../../iEMB.Android /t:PackageForAndroid /p:Configuration=Debug
