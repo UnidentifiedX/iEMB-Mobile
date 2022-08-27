@@ -30,6 +30,9 @@
                     <StackLayout x:Name="announcementContent" Padding="0" Margin="0, 15, 0, 0" VerticalOptions="FillAndExpand">
 
                     </StackLayout>
+                    <StackLayout x:Name="attatchmentButtons" VerticalOptions="FillAndExpand" Margin="0, 20, 0, 0">
+                        
+                    </StackLayout>
                 </StackLayout>
             </Grid>
         </ScrollView>

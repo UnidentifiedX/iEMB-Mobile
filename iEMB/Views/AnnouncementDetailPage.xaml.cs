@@ -2,6 +2,7 @@
 using HtmlAgilityPack;
 using iEMB.Models;
 using iEMB.ViewModels;
+using Plugin.Permissions;
 using System;
 using System.Buffers.Text;
 using System.Collections.Generic;
@@ -77,7 +78,8 @@ namespace iEMB.Views
 
                 var result = await client.SendAsync(message);
                 var doc = new HtmlDocument();
-                doc.LoadHtml(await result.Content.ReadAsStringAsync());
+                var contentString = await result.Content.ReadAsStringAsync();
+                doc.LoadHtml(contentString);
 
                 var post = doc.DocumentNode.Descendants().Where(div => div.HasClass("box") && div.Id == "fontBox").First().Descendants().Where(div => div.Id == "hyplink-css-style").First().SelectSingleNode("div");
 
@@ -89,7 +91,7 @@ namespace iEMB.Views
 
                 itemStar.Clicked += (s, e) =>
                 {
-                    StarAnnouncement(s, e, announcement.Pid, isStarred, verificationToken, sessionID, authenticationToken);
+                    StarAnnouncement(announcement.Pid, isStarred, verificationToken, sessionID, authenticationToken);
                     isStarred = !isStarred;
                 };
 
@@ -263,6 +265,7 @@ namespace iEMB.Views
 
                 // Insert any remaining formatted strings, if any
                 InsertFormattedString();
+                LoadAttatchments(contentString);
             }
         }
 
@@ -447,7 +450,86 @@ namespace iEMB.Views
             FormattedString = new FormattedString();
         }
 
-        private async void StarAnnouncement(object s, EventArgs e, string pid, bool isStarred, string verificationToken, string sessionID, string authenticationToken)
+        private void LoadAttatchments(string content)
+        {
+            var matches = Regex.Matches(content, @"addConfirmedChild\('(.*?)','(.*?)','(.*?)',(.*?),(.*?),(.*?)\)");
+            foreach (Match match in matches)
+            {
+                var verificationToken = LoginPage.VerificationToken;
+                var sessionID = LoginPage.SessionID;
+                var authenticationToken = LoginPage.AuthenticationToken;
+
+                var fileName = match.Groups[2].Value;
+                var id = match.Groups[3].Value;
+                var boardId = match.Groups[5].Value;
+                var ctype = match.Groups[6].Value;
+
+                var url = $"Board/showFile?t=2&ctype={ctype}&id={id}&file={Uri.EscapeDataString(fileName)}&boardId={boardId}";
+
+                var imageTextStacklayout = new StackLayout
+                {
+                    Orientation = StackOrientation.Horizontal,
+                };
+                var buttonFrame = new Frame
+                {
+                    BorderColor = Color.Red,
+                    BackgroundColor = Color.Transparent,
+                    Padding = 10,
+                    HorizontalOptions = LayoutOptions.StartAndExpand,
+                };
+
+                imageTextStacklayout.Children.Add(new Image
+                {
+                    Source = "icon_download.png",
+                });
+
+                imageTextStacklayout.Children.Add(new Label
+                {
+                    Text = fileName,
+                    TextColor = Color.White,
+                });
+
+                var attatchmentTappedGestureRecognizer = new TapGestureRecognizer();
+                attatchmentTappedGestureRecognizer.Tapped += async (s, e) =>
+                {
+                    using (var handler = new HttpClientHandler { UseCookies = false })
+                    using (var client = new HttpClient(handler) { BaseAddress = new Uri("https://iemb.hci.edu.sg") })
+                    {
+                        var message = new HttpRequestMessage(HttpMethod.Get, "https://iemb.hci.edu.sg/" + url);
+                        message.Headers.Add("mode", "no-cors");
+                        message.Headers.Add("host", "iemb.hci.edu.sg");
+                        message.Headers.Add("referer", $"https://iemb.hci.edu.sg/Board/Detail/1048");
+                        message.Headers.Add("user-agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Mobile Safari/537.36");
+                        message.Headers.Add("cookie", $"__RequestVerificationToken={verificationToken};ASP.NET_SessionId={sessionID}; AuthenticationToken={authenticationToken};");
+
+                        var result = await client.SendAsync(message);
+                        var fileByteArray = await result.Content.ReadAsByteArrayAsync();
+
+                        try
+                        {
+                            var path = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments);
+                            var folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Documents", "temp");
+                            var filePath = Path.Combine(Directory.GetCurrentDirectory(), $"/storage/emulated/0/Download/{fileName}");
+                            Console.WriteLine(filePath);
+
+                            File.WriteAllBytes(filePath, fileByteArray);
+                            UserDialogs.Instance.Toast($"Successfully downloaded {fileName}!");
+                        }
+                        catch
+                        {
+                            UserDialogs.Instance.Toast("Something went wrong downloading the attatchment");
+                        }
+                    }
+                };
+
+                buttonFrame.Content = imageTextStacklayout;
+                buttonFrame.GestureRecognizers.Add(attatchmentTappedGestureRecognizer);
+
+                attatchmentButtons.Children.Add(buttonFrame);
+            }
+        }
+
+        private async void StarAnnouncement(string pid, bool isStarred, string verificationToken, string sessionID, string authenticationToken)
         {
             var boardID = 1048;
 
