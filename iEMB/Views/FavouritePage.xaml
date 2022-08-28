@@ -33,7 +33,6 @@
                                                 <Label Text="{Binding Sender}" TextColor="White"/>
                                                 <Image Source="icon_calendar.png" Margin="15, 0, 0, 0"/>
                                                 <Label Text="{Binding PostDate}" TextColor="White"/>
-                                                <Image x:Name="attachmentIcon" Source="icon_attachment.png" Margin="15, 0, 0, 0"/>
                                             </StackLayout>
                                             <StackLayout.GestureRecognizers>
                                                 <TapGestureRecognizer Tapped="Announcement_Tapped"/>
