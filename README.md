@@ -38,9 +38,9 @@ I'll release it on the Google Play Store when the time comes, but for now, downl
 ### Pictures
 This is what the app looks like...
 
-![Login Page Image](https://github.com/UnidentifiedX/iEMB-Mobile/blob/master/Images/login.jpg?raw=true)
+![Login Page Image](https://github.com/UnidentifiedX/iEMB-Mobile/blob/master/Images/login.jpeg?raw=true)
 
-![Homepage Image](https://github.com/UnidentifiedX/iEMB-Mobile/blob/master/Images/homepage.jpg?raw=true)
+![Homepage Image](https://github.com/UnidentifiedX/iEMB-Mobile/blob/master/Images/homepage.jpeg?raw=true)
 
 ### Also check out
 - [intelligent-EMB](https://iemb.dabby.studio) by [dabby9734](https://github.com/dabby9734): very cool
