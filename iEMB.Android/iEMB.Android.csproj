@@ -82,7 +82,6 @@
   <ItemGroup>
     <AndroidResource Include="Resources\values\styles.xml" />
     <AndroidResource Include="Resources\values\colors.xml" />
-    <AndroidResource Include="Resources\drawable\xamarin_logo.png" />
     <AndroidResource Include="Resources\drawable\icon_about.png" />
     <AndroidResource Include="Resources\drawable\icon_feed.png" />
   </ItemGroup>
@@ -91,9 +90,6 @@
       <Project>{976EA330-2C6D-4572-AB1C-D0A9F78434A1}</Project>
       <Name>iEMB</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable\clock_tower.jpg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\hci_logo.png" />
@@ -147,10 +143,10 @@
     <AndroidResource Include="Resources\mipmap-xxxhdpi\hci_launcher_adaptive_fore.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\white_arrowhead_down.png" />
+    <AndroidResource Include="Resources\drawable\icon_white_arrowhead_down.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\white_arrowhead_left.png" />
+    <AndroidResource Include="Resources\drawable\icon_white_arrowhead_left.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\icon_logout.png" />
@@ -172,6 +168,18 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\icon_attachment.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\icon_search.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\icon_info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\icon_warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\icon_critical.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

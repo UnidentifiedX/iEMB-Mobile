@@ -17,5 +17,6 @@ namespace iEMB.Models
         public bool IsRead { get; set; }
         public bool IsArchived { get; set; }
         public bool HasAttatchments { get; set; }
+        public string PriorityImageSource { get; set; }
     }
 }

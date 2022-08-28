@@ -12,6 +12,7 @@
     </ContentPage.BindingContext>
 
     <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="icon_search.png" Clicked="SearchButton_Clicked"/>
         <ToolbarItem IconImageSource="icon_logout.png" Clicked="LogoutButton_Clicked"/>
     </ContentPage.ToolbarItems>
 
@@ -38,7 +39,10 @@
                                             <Label Text="{Binding Username}" TextColor="White"/>
                                             <Image Source="icon_calendar.png" Margin="15, 0, 0, 0"/>
                                             <Label Text="{Binding PostDate}" TextColor="White"/>
-                                            <Image Source="icon_attachment.png" Margin="15, 0, 0, 0" IsVisible="{Binding HasAttatchments}"/>
+                                            <StackLayout Orientation="Horizontal" Margin="15, 0, 0, 0">
+                                                <Image Source="icon_attachment.png" IsVisible="{Binding HasAttatchments}"/>
+                                                <Image Source="{Binding PriorityImageSource}"/>
+                                            </StackLayout>
                                         </StackLayout>
                                         <StackLayout.GestureRecognizers>
                                             <TapGestureRecognizer Tapped="Announcement_Tapped"/>
@@ -56,7 +60,7 @@
                                             FontAttributes="Bold"
                                             FontSize="Medium"
                                             HorizontalOptions="Start"/>
-                                <Image Source="white_arrowhead_left.png"
+                                <Image Source="icon_white_arrowhead_left.png"
                                        HorizontalOptions="EndAndExpand"
                                        AnchorY="0.5">
                                     <Image.Triggers>
@@ -64,7 +68,7 @@
                                                      Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}, Path=IsExpanded}"
                                                      Value="True">
                                             <Setter Property="Source"
-                                                    Value="white_arrowhead_down.png"/>
+                                                    Value="icon_white_arrowhead_down.png"/>
                                         </DataTrigger>
                                     </Image.Triggers>
                                 </Image>
@@ -82,7 +86,10 @@
                                                 <Label Text="{Binding Username}" TextColor="White"/>
                                                 <Image Source="icon_calendar.png" Margin="15, 0, 0, 0"/>
                                                 <Label Text="{Binding PostDate}" TextColor="White"/>
-                                                <Image Source="icon_attachment.png" Margin="15, 0, 0, 0" IsVisible="{Binding HasAttatchments}"/>
+                                                <StackLayout Orientation="Horizontal" Margin="15, 0, 0, 0">
+                                                    <Image Source="icon_attachment.png" IsVisible="{Binding HasAttatchments}"/>
+                                                    <Image Source="{Binding PriorityImageSource}"/>
+                                                </StackLayout>
                                             </StackLayout>
                                             <StackLayout.GestureRecognizers>
                                                 <TapGestureRecognizer Tapped="Announcement_Tapped"/>

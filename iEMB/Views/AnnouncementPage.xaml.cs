@@ -59,14 +59,7 @@ namespace iEMB.Views
             var unreadMessages = doc.DocumentNode.SelectNodes("//tbody")[0]?.SelectNodes("tr");
             var hasUnreadMessages = !(unreadMessages.FirstOrDefault().InnerText.Trim() == "No Record Found!");
 
-            if(hasUnreadMessages)
-            {
-                noUnreadAnnouncements.IsVisible = false;
-            }
-            else
-            {
-                noUnreadAnnouncements.IsVisible = true;
-            }
+            noUnreadAnnouncements.IsVisible = !hasUnreadMessages;
 
             var readMessages = doc.DocumentNode.SelectNodes("//tbody")[1].SelectNodes("tr");
             var unreadAnnouncements = new List<Announcement>();
@@ -94,7 +87,7 @@ namespace iEMB.Views
                             ViewCount = int.Parse(Regex.Match(data[5].InnerText, @"Viewer:\s+(\d+)").Groups[1].Value),
                             ReplyCount = int.Parse(Regex.Match(data[5].InnerText, @"Response:\s+(\d+)").Groups[1].Value),
                             IsRead = false,
-                            HasAttatchments = data[2].SelectSingleNode("i") != null
+                            HasAttatchments = data[2].SelectSingleNode("i") != null 
                         };
 
                         unreadAnnouncements.Add(announcement);
@@ -139,11 +132,37 @@ namespace iEMB.Views
 
             foreach (var announcement in unreadAnnouncements)
             {
+                if(announcement.Priority == "Urgent")
+                {
+                    announcement.PriorityImageSource = "icon_critical.png";
+                } 
+                else if (announcement.Priority == "Important")
+                {
+                    announcement.PriorityImageSource = "icon_warning.png";
+                }
+                else
+                {
+                    announcement.PriorityImageSource = "icon_info.png";
+                }
+                
                 UnreadAnnouncements.Add(announcement);
             }            
             
             foreach (var announcement in readAnnouncements)
             {
+                if (announcement.Priority == "Urgent")
+                {
+                    announcement.PriorityImageSource = "icon_critical.png";
+                }
+                else if (announcement.Priority == "Important")
+                {
+                    announcement.PriorityImageSource = "icon_warning.png";
+                }
+                else
+                {
+                    announcement.PriorityImageSource = "icon_info.png";
+                }
+
                 ReadAnnouncements.Add(announcement);
             }
         }
@@ -179,6 +198,11 @@ namespace iEMB.Views
             }
 
             await Navigation.PushAsync(new AnnouncementDetailPage(announcement));
+        }
+
+        private async void SearchButton_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new AnnouncementSearchPage(unreadAnnouncements: UnreadAnnouncements, readAnnouncements: ReadAnnouncements));
         }
     }
 }

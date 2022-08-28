@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="iEMB.Views.AnnouncementSearchPage"
+             Title="{Binding Title}"
+             BackgroundColor="#1a1a1a">
+    <ContentPage.Content>
+        <StackLayout>
+            <ScrollView Padding="0" Margin="10, 10, 10, 10">
+                <StackLayout>
+                    <SearchBar Placeholder="Search for an announcement..." PlaceholderColor="Gray" TextColor="White" TextChanged="SearchBar_QueryChanged"/>
+                    <Grid>
+                        <StackLayout x:Name="announcementStackLayout">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame CornerRadius="10" Padding="0">
+                                        <StackLayout BackgroundColor="Black" Padding="15, 5, 15, 5" MinimumHeightRequest="75">
+                                            <Label Text="{Binding Subject}" TextColor="White" FontAttributes="Bold" FontSize="Medium" VerticalOptions="CenterAndExpand"/>
+                                            <StackLayout Orientation="Horizontal" VerticalOptions="EndAndExpand" Margin="0, 0, 0, 5">
+                                                <Image Source="icon_calendar_user.png"/>
+                                                <Label Text="{Binding Username}" TextColor="White"/>
+                                                <Image Source="icon_calendar.png" Margin="15, 0, 0, 0"/>
+                                                <Label Text="{Binding PostDate}" TextColor="White"/>
+                                                <StackLayout Orientation="Horizontal" Margin="15, 0, 0, 0">
+                                                    <Image Source="icon_attachment.png" IsVisible="{Binding HasAttatchments}"/>
+                                                    <Image Source="{Binding PriorityImageSource}"/>
+                                                </StackLayout>
+                                        </StackLayout>
+                                            <StackLayout.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="Announcement_Tapped"/>
+                                            </StackLayout.GestureRecognizers>
+                                        </StackLayout>
+                                    </Frame>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </StackLayout>
+                        <Label x:Name="noQueryText" Text="No announcements found" TextColor="White" IsVisible="false" HorizontalOptions="CenterAndExpand" Margin="0, 20, 0, 0"/>
+                    </Grid>
+                </StackLayout>
+
+            </ScrollView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

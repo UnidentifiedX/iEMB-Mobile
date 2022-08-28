@@ -12,7 +12,14 @@ namespace iEMB.ViewModels
     public class AnnouncementViewModel : BaseViewModel
     {
         private ObservableCollection<Announcement> _unreadAnnouncements;
-        public ObservableCollection<Announcement> _readAnnouncements;
+        private ObservableCollection<Announcement> _readAnnouncements;
+
+        public AnnouncementViewModel()
+        {
+            Title = "Announcements";
+            UnreadAnnouncements = AnnouncementPage.UnreadAnnouncements;
+            ReadAnnouncements = AnnouncementPage.ReadAnnouncements;
+        }
 
         public ObservableCollection<Announcement> UnreadAnnouncements
         {
@@ -30,13 +37,6 @@ namespace iEMB.ViewModels
             {
                 _readAnnouncements = value;
             }
-        }
-
-        public AnnouncementViewModel()
-        {
-            Title = "Announcements";
-            UnreadAnnouncements = AnnouncementPage.UnreadAnnouncements;
-            ReadAnnouncements = AnnouncementPage.ReadAnnouncements;
         }
     }
 }
