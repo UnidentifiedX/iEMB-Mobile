@@ -30,7 +30,6 @@ namespace iEMB.Views
         public AnnouncementPage()
         {
             BindingContext = new AnnouncementViewModel();
-            //GetAnnouncements(LoginPage.VerificationToken, LoginPage.SessionID, LoginPage.AuthenticationToken);
             InitializeComponent();
         }
 

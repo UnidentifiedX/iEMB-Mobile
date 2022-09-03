@@ -30,8 +30,19 @@
                     <StackLayout x:Name="announcementContent" Padding="0" Margin="0, 15, 0, 0" VerticalOptions="FillAndExpand">
 
                     </StackLayout>
+                    <StackLayout x:Name="replyFormStackLayout" Margin="0, 20, 0, 0" IsVisible="true">
+                        <Label Text="Reply to post" TextColor="White" FontSize="Small"/>
+                        <StackLayout x:Name="radioStack" Orientation="Horizontal">
+                            <RadioButton x:Name="optionA" Content="A" TextColor="White" FontSize="Small"/>
+                            <RadioButton x:Name="optionB" Content="B" TextColor="White" FontSize="Small"/>
+                            <RadioButton x:Name="optionC" Content="C" TextColor="White" FontSize="Small"/>
+                            <RadioButton x:Name="optionD" Content="D" TextColor="White" FontSize="Small"/>
+                            <RadioButton x:Name="optionE" Content="E" TextColor="White" FontSize="Small"/>
+                        </StackLayout>
+                        <Editor x:Name="content" Placeholder="Type in your reply..." PlaceholderColor="White" TextColor="White" AutoSize="TextChanges" FontSize="Small"/>
+                    </StackLayout>
                     <StackLayout x:Name="attachmentButtons" VerticalOptions="FillAndExpand" Margin="0, 20, 0, 0">
-                        
+
                     </StackLayout>
                 </StackLayout>
             </Grid>

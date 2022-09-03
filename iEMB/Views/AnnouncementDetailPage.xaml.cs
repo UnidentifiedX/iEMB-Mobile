@@ -83,190 +83,200 @@ namespace iEMB.Views
 
                 var post = doc.DocumentNode.Descendants().Where(div => div.HasClass("box") && div.Id == "fontBox").First().Descendants().Where(div => div.Id == "hyplink-css-style").First().SelectSingleNode("div");
 
-                var isStarred = doc.GetElementbyId("fav").Attributes["title"].Value == "starred message";
-                if (isStarred)
-                {
-                    itemStar.IconImageSource = ImageSource.FromFile("icon_star_filled.png");
-                }
+                LoadMessageContent(announcement, doc, post);
+                LoadAttachments(contentString);
+                LoadReplyBox(doc, announcement.Pid);
+            }
+        }
 
-                itemStar.Clicked += (s, e) =>
-                {
-                    StarAnnouncement(announcement.Pid, isStarred, verificationToken, sessionID, authenticationToken);
-                    isStarred = !isStarred;
-                };
+        private void LoadMessageContent(Announcement announcement, HtmlDocument document, HtmlNode post)
+        {
+            var verificationToken = LoginPage.VerificationToken;
+            var sessionID = LoginPage.SessionID;
+            var authenticationToken = LoginPage.AuthenticationToken;
 
-                subject.Text = announcement.Subject;
-                sender.Text = "From: " + announcement.Sender;
-                recepients.Text = "Recepients: " + announcement.Recepients;
-                postDate.Text = "Posted on: " + announcement.PostDate;
+            var isStarred = document.GetElementbyId("fav").Attributes["title"].Value == "starred message";
+            if (isStarred)
+            {
+                itemStar.IconImageSource = ImageSource.FromFile("icon_star_filled.png");
+            }
 
-                loadingIndicator.IsRunning = false;
-                loadingText.IsVisible = false;
-                try
+            itemStar.Clicked += (s, e) =>
+            {
+                StarAnnouncement(announcement.Pid, isStarred);
+                isStarred = !isStarred;
+            };
+
+            subject.Text = announcement.Subject;
+            sender.Text = "From: " + announcement.Sender;
+            recepients.Text = "Recepients: " + announcement.Recepients;
+            postDate.Text = "Posted on: " + announcement.PostDate;
+
+            loadingIndicator.IsRunning = false;
+            loadingText.IsVisible = false;
+            try
+            {
+                foreach (var node in post.Descendants())
                 {
-                    foreach (var node in post.Descendants())
+                    switch (node.Name)
                     {
-                        switch (node.Name)
-                        {
-                            case "table":
+                        case "table":
+                            InsertFormattedString();
+
+                            var frameBorderWidth = 2;
+
+                            var grid = new Grid()
+                            {
+                                ColumnSpacing = -frameBorderWidth,
+                                RowSpacing = -frameBorderWidth,
+                            };
+
+                            var rows = node.SelectNodes("tbody/tr").Count;
+                            var columns = node.SelectNodes("tbody/tr").Max(tr => tr.SelectNodes("td").Count);
+
+                            for (int i = 0; i < rows; i++)
+                            {
+                                grid.RowDefinitions.Add(new RowDefinition
+                                {
+                                    Height = new GridLength(1, GridUnitType.Auto),
+                                });
+                            }
+
+                            for (int i = 0; i < columns; i++)
+                            {
+                                grid.ColumnDefinitions.Add(new ColumnDefinition
+                                {
+                                    Width = new GridLength(1, GridUnitType.Auto),
+                                });
+                            }
+
+                            var rowCount = 0;
+                            foreach (var row in node.SelectNodes("tbody/tr"))
+                            {
+                                var tdNodes = row.SelectNodes("td");
+                                var cellCount = tdNodes.Count;
+
+                                for (int columnCount = 0; columnCount < cellCount; columnCount++)
+                                {
+                                    var rowSpan = tdNodes[columnCount].Attributes["rowspan"]?.Value;
+                                    var colSpan = tdNodes[columnCount].Attributes["colspan"]?.Value;
+                                    var frame = new Frame
+                                    {
+                                        BorderColor = Color.White,
+                                        BackgroundColor = Color.FromHex("#1a1a1a"),
+                                        Padding = new Thickness(frameBorderWidth),
+                                    };
+                                    var label = new Label
+                                    {
+                                        TextColor = Color.White,
+                                    };
+                                    var formattedString = new FormattedString();
+
+                                    foreach (var tdNode in tdNodes[columnCount].Descendants())
+                                    {
+                                        var span = ParseFormattedText(tdNode, NodeType.table);
+                                        span.FontSize = Device.GetNamedSize(NamedSize.Small, typeof(FormattedString));
+                                        formattedString.Spans.Add(span);
+                                    }
+
+                                    label.FormattedText = formattedString;
+                                    frame.Content = label;
+                                    grid.Children.Add(frame,
+                                        columnCount, colSpan == null ? columnCount + 1 : columnCount + int.Parse(colSpan), rowCount, rowSpan == null ? rowCount + 1 : rowCount + int.Parse(rowSpan));
+                                }
+                                rowCount++;
+                            }
+
+                            announcementContent.Children.Add(grid);
+                            break;
+                        case "ol":
+                            var count = 1;
+                            foreach (var point in node.SelectNodes("li"))
+                            {
+                                AddSpan(new Span
+                                {
+                                    Text = Environment.NewLine + $"{count}. ",
+                                });
+
+                                foreach (var descendant in point.Descendants())
+                                {
+                                    AddSpan(ParseFormattedText(descendant, NodeType.ul));
+                                }
+
+                                count++;
+                            }
+
+                            break;
+                        case "ul":
+                            //InsertFormattedString();
+                            foreach (var point in node.SelectNodes("li"))
+                            {
+                                AddSpan(new Span
+                                {
+                                    Text = Environment.NewLine + "• ",
+                                });
+
+                                foreach (var descendant in point.Descendants())
+                                {
+                                    AddSpan(ParseFormattedText(descendant, NodeType.ul));
+                                }
+                            }
+                            break;
+                        case "img":
+                            try
+                            {
                                 InsertFormattedString();
+                                var src = node.Attributes["src"].Value;
 
-                                var frameBorderWidth = 2;
-
-                                var grid = new Grid()
+                                Image image;
+                                if (src.StartsWith("http"))
                                 {
-                                    ColumnSpacing = -frameBorderWidth,
-                                    RowSpacing = -frameBorderWidth,
-                                };
-
-                                var rows = node.SelectNodes("tbody/tr").Count;
-                                var columns = node.SelectNodes("tbody/tr").Max(tr => tr.SelectNodes("td").Count);
-
-                                for (int i = 0; i < rows; i++)
-                                {
-                                    grid.RowDefinitions.Add(new RowDefinition
+                                    image = new Image()
                                     {
-                                        Height = new GridLength(1, GridUnitType.Auto),
-                                    });
+                                        Source = new Uri(src),
+                                        Margin = new Thickness(0, 15, 0, 0),
+                                    };
+                                }
+                                else
+                                {
+                                    var bytes = Convert.FromBase64String(Regex.Replace(src, @"data:image/.+?;base64,", ""));
+                                    image = new Image()
+                                    {
+                                        Source = ImageSource.FromStream(() => new MemoryStream(bytes)),
+                                        Margin = new Thickness(0, 15, 0, 0)
+                                    };
                                 }
 
-                                for (int i = 0; i < columns; i++)
-                                {
-                                    grid.ColumnDefinitions.Add(new ColumnDefinition
-                                    {
-                                        Width = new GridLength(1, GridUnitType.Auto),
-                                    });
-                                }
-
-                                var rowCount = 0;
-                                foreach (var row in node.SelectNodes("tbody/tr"))
-                                {
-                                    var tdNodes = row.SelectNodes("td");
-                                    var cellCount = tdNodes.Count;
-
-                                    for (int columnCount = 0; columnCount < cellCount; columnCount++)
-                                    {
-                                        var rowSpan = tdNodes[columnCount].Attributes["rowspan"]?.Value;
-                                        var colSpan = tdNodes[columnCount].Attributes["colspan"]?.Value;
-                                        var frame = new Frame
-                                        {
-                                            BorderColor = Color.White,
-                                            BackgroundColor = Color.FromHex("#1a1a1a"),
-                                            Padding = new Thickness(frameBorderWidth),
-                                        };
-                                        var label = new Label
-                                        {
-                                            TextColor = Color.White,
-                                        };
-                                        var formattedString = new FormattedString();
-
-                                        foreach (var tdNode in tdNodes[columnCount].Descendants())
-                                        {
-                                            var span = ParseFormattedText(tdNode, NodeType.table);
-                                            span.FontSize = Device.GetNamedSize(NamedSize.Small, typeof(FormattedString));
-                                            formattedString.Spans.Add(span);
-                                        }
-
-                                        label.FormattedText = formattedString;
-                                        frame.Content = label;
-                                        grid.Children.Add(frame,
-                                            columnCount, colSpan == null ? columnCount + 1 : columnCount + int.Parse(colSpan), rowCount, rowSpan == null ? rowCount + 1 : rowCount + int.Parse(rowSpan));
-                                    }
-                                    rowCount++;
-                                }
-
-                                announcementContent.Children.Add(grid);
-                                break;
-                            case "ol":
-                                var count = 1;
-                                foreach (var point in node.SelectNodes("li"))
-                                {
-                                    AddSpan(new Span
-                                    {
-                                        Text = Environment.NewLine + $"{count}. ",
-                                    });
-
-                                    foreach (var descendant in point.Descendants())
-                                    {
-                                        AddSpan(ParseFormattedText(descendant, NodeType.ul));
-                                    }
-
-                                    count++;
-                                }
-
-                                break;
-                            case "ul":
-                                //InsertFormattedString();
-                                foreach (var point in node.SelectNodes("li"))
-                                {
-                                    AddSpan(new Span
-                                    {
-                                        Text = Environment.NewLine + "• ",
-                                    });
-
-                                    foreach (var descendant in point.Descendants())
-                                    {
-                                        AddSpan(ParseFormattedText(descendant, NodeType.ul));
-                                    }
-                                }
-                                break;
-                            case "img":
-                                try
-                                {
-                                    InsertFormattedString();
-                                    var src = node.Attributes["src"].Value;
-
-                                    Image image;
-                                    if (src.StartsWith("http"))
-                                    {
-                                        image = new Image()
-                                        {
-                                            Source = new Uri(src),
-                                            Margin = new Thickness(0, 15, 0, 0),
-                                        };
-                                    }
-                                    else
-                                    {
-                                        var bytes = Convert.FromBase64String(Regex.Replace(src, @"data:image/.+?;base64,", ""));
-                                        image = new Image()
-                                        {
-                                            Source = ImageSource.FromStream(() => new MemoryStream(bytes)),
-                                            Margin = new Thickness(0, 15, 0, 0)
-                                        };
-                                    }
-
-                                    announcementContent.Children.Add(image);
-                                }
-                                catch (Exception)
-                                {
-                                    //ToastConfig.DefaultPosition = ToastPosition.Bottom;
-                                    //UserDialogs.Instance.Toast("Unable to load image");
-                                }
-                                break;
-                            case "p":
-                            case "a":
-                            case "br":
-                            case "i":
-                            case "u":
-                            case "strong":
-                            case "span":
-                            case "#text":
-                                AddSpan(ParseFormattedText(node, NodeType.none));
-                                break;
-                        }
+                                announcementContent.Children.Add(image);
+                            }
+                            catch (Exception)
+                            {
+                                //ToastConfig.DefaultPosition = ToastPosition.Bottom;
+                                //UserDialogs.Instance.Toast("Unable to load image");
+                            }
+                            break;
+                        case "p":
+                        case "a":
+                        case "br":
+                        case "i":
+                        case "u":
+                        case "strong":
+                        case "span":
+                        case "#text":
+                            AddSpan(ParseFormattedText(node, NodeType.none));
+                            break;
                     }
                 }
-                catch (Exception ex)
-                {
-                    ToastConfig.DefaultPosition = ToastPosition.Bottom;
-                    UserDialogs.Instance.Toast("Something went wrong loading the announcement.");
-                    Console.WriteLine(ex.ToString());
-                }
-
-                // Insert any remaining formatted strings, if any
-                InsertFormattedString();
-                LoadAttachments(contentString);
             }
+            catch (Exception ex)
+            {
+                ToastConfig.DefaultPosition = ToastPosition.Bottom;
+                UserDialogs.Instance.Toast("Something went wrong loading the announcement.");
+                Console.WriteLine(ex.ToString());
+            }
+
+            // Insert any remaining formatted strings, if any
+            InsertFormattedString();
         }
 
         private static Span ParseFormattedText(HtmlNode node, NodeType nodeType)
@@ -404,11 +414,6 @@ namespace iEMB.Views
                             Text = Environment.NewLine + Environment.NewLine,
                         };
                     }
-
-                    //return new Span
-                    //{
-                    //    Text = Environment.NewLine,
-                    //};
                     return new Span();
                 case "#text":
                     if (Regex.Replace(text, @"\s", "") == "") return new Span();
@@ -528,8 +533,99 @@ namespace iEMB.Views
             }
         }
 
-        private async void StarAnnouncement(string pid, bool isStarred, string verificationToken, string sessionID, string authenticationToken)
+        private void LoadReplyBox(HtmlDocument document, string pid)
         {
+            var replyForm = document.DocumentNode.Descendants().Where(node => node.Id == "replyForm" && node.Name == "form").FirstOrDefault();
+
+            if (replyForm == null) return;
+
+            var frame = new Frame
+            {
+                BackgroundColor = Color.Transparent,
+                BorderColor = Color.Red,
+                Padding = 10,
+                HorizontalOptions = LayoutOptions.End,
+            };
+
+            var tapGestureRecogniser = new TapGestureRecognizer();
+            tapGestureRecogniser.Tapped += (s, e) =>
+            {
+                ReplyAnnouncement(pid);
+            };
+
+            var frameContent = new StackLayout
+            {
+                Orientation = StackOrientation.Horizontal,
+            };
+
+            frameContent.Children.Add(new Label
+            {
+                Text = "Reply",
+                TextColor = Color.White,
+            });
+
+            frameContent.Children.Add(new Image
+            {
+                Source = "icon_reply.png",
+            });
+
+            frame.Content = frameContent;
+            frame.GestureRecognizers.Add(tapGestureRecogniser);
+            replyFormStackLayout.Children.Add(frame);
+
+            replyFormStackLayout.IsVisible = true;
+        }
+
+        private async void ReplyAnnouncement(string pid)
+        {
+            var verificationToken = LoginPage.VerificationToken;
+            var sessionID = LoginPage.SessionID;
+            var authenticationToken = LoginPage.AuthenticationToken;
+            var boardID = 1048;
+
+            var replyContent = content.Text;
+            var replySelection = ((RadioButton)radioStack.Children.Where(child => ((RadioButton)child).IsChecked).FirstOrDefault())?.Content;
+
+            if(replySelection == null)
+            {
+                UserDialogs.Instance.Toast("Please select an option to reply");
+                return;
+            }
+
+            if(await DisplayAlert("Alert", "This feature is currently experimental and my not work as intended. You may want to submit a reply on the actualy iEMB website to make sure. Do you want to continue?", "Yes", "No"))
+            {
+                var postData = $"boardid=${boardID}&topic=${pid}&replyto=0&isArchived=0&UserRating=${replySelection}&replyContent=${replyContent}&PostMessage=Post+Reply";
+                var postDataByteArray = Encoding.UTF8.GetBytes(postData);
+
+                var cookieContainer = new CookieContainer();
+                var request = (HttpWebRequest)WebRequest.Create("https://iemb.hci.edu.sg/board/ProcessResponse");
+                cookieContainer.Add(new Uri("https://iemb.hci.edu.sg/"), new Cookie("__RequestVerificationToken", verificationToken));
+                cookieContainer.Add(new Uri("https://iemb.hci.edu.sg/"), new Cookie("ASP.NET_SessionId", sessionID));
+                cookieContainer.Add(new Uri("https://iemb.hci.edu.sg/"), new Cookie("AuthenticationToken", authenticationToken));
+                request.CookieContainer = cookieContainer;
+                request.Method = "POST";
+                request.Host = "iemb.hci.edu.sg";
+                request.Referer = "https://iemb.hci.edu.sg/";
+                request.Headers.Add("Origin", "https://iemb.hci.edu.sg");
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.UserAgent = "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Mobile Safari/537.36";
+                var bodyStream = request.GetRequestStream();
+                bodyStream.Write(postDataByteArray, 0, postDataByteArray.Length);
+
+                UserDialogs.Instance.Toast("Successfully replied to message!");
+            }
+            else
+            {
+                UserDialogs.Instance.Toast("The reply request was cancelled");
+            }
+        }
+
+        private async void StarAnnouncement(string pid, bool isStarred)
+        {
+            var verificationToken = LoginPage.VerificationToken;
+            var sessionID = LoginPage.SessionID;
+            var authenticationToken = LoginPage.AuthenticationToken;
+
             var boardID = 1048;
 
             var postData = $"status={(isStarred ? 0 : 1)}&boardId={boardID}&topicid={pid}";
