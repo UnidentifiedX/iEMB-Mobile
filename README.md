@@ -27,11 +27,11 @@ I'll release it on the Google Play Store when the time comes, but for now, downl
 - Star announcements
 - ...and view them
 - Search announcements
+- Save announcements locally
+- Reply to messages
 - And more features to come!
 
 *Planned Features...*
-- Replying to messages
-- Saving announcements locally
 - Pinch-to-zoom on images
 - Swipe to mark as read
 
