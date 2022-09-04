@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using SQLite;
+using Xamarin.Forms;
 namespace iEMB.Models
 {
     public class Announcement
@@ -9,6 +10,7 @@ namespace iEMB.Models
         public string Subject { get; set; }
         public string Url { get; set; }
         public string BoardID { get; set; }
+        [PrimaryKey]
         public string Pid { get; set; }
         public string Priority { get; set; }
         public string Recepients { get; set; }

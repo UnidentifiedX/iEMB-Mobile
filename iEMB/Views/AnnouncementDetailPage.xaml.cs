@@ -23,7 +23,7 @@ namespace iEMB.Views
     public partial class AnnouncementDetailPage : ContentPage
     {
 
-        static FormattedString FormattedString = new FormattedString();
+        private static FormattedString FormattedString = new FormattedString();
 
         public AnnouncementDetailPage()
         {
@@ -39,53 +39,69 @@ namespace iEMB.Views
 
         private async void GetAnnouncement(Announcement announcement)
         {
-            var boardID = "1048";
-
-            var verificationToken = LoginPage.VerificationToken;
-            var sessionID = LoginPage.SessionID;
-            var authenticationToken = LoginPage.AuthenticationToken;
-
-            var cookieContainer = new CookieContainer();
-
-            using (var handler = new HttpClientHandler { UseCookies = false })
-            using (var client = new HttpClient(handler) { BaseAddress = new Uri("https://iemb.hci.edu.sg") })
+            if (announcement.HtmlString != null)
             {
-                var message = new HttpRequestMessage(HttpMethod.Get, "https://iemb.hci.edu.sg" + announcement.Url);
-                // chinese quiz thing
-                //var message = new HttpRequestMessage(HttpMethod.Get, $"https://iemb.hci.edu.sg/Board/content/98724?board=1048&isArchived=False");
-                // LSS test information
-                //var message = new HttpRequestMessage(HttpMethod.Get, $"https://iemb.hci.edu.sg/Board/content/98745?board=1048&isArchived=False");
-                // australian math 
-                //var message = new HttpRequestMessage(HttpMethod.Get, $"https://iemb.hci.edu.sg/Board/content/97500?board=1048&isArchived=False");
-                // Canteen pic
-                //var message = new HttpRequestMessage(HttpMethod.Get, $"https://iemb.hci.edu.sg/Board/content/98715?board=1048&isArchived=False");
-                // Chinese CT mesage
-                //var message = new HttpRequestMessage(HttpMethod.Get, $"https://iemb.hci.edu.sg/Board/content/98074?board=1048&isArchived=False");
-                // class tshirt
-                //var message = new HttpRequestMessage(HttpMethod.Get, $"https://iemb.hci.edu.sg/Board/content/87413?board=1048&isArchived=False");
-
-
-                //var message = new HttpRequestMessage(HttpMethod.Get, $"https://iemb.hci.edu.sg/Board/content/97500?board=1048&isArchived=False");
-
-                //buggy
-                // https://iemb.hci.edu.sg/Board/content/98685?board=1048&isArchived=False (a href and strong don't work with each other)
-                // https://iemb.hci.edu.sg/Board/content/95252?board=1048&isArchived=False (when you have a ul in a ul (WHY????????))
-
-                message.Headers.Add("host", "iemb.hci.edu.sg");
-                message.Headers.Add("referer", $"https://iemb.hci.edu.sg/Board/Detail/{boardID}");
-                message.Headers.Add("user-agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Mobile Safari/537.36");
-                message.Headers.Add("cookie", $"__RequestVerificationToken={verificationToken};ASP.NET_SessionId={sessionID}; AuthenticationToken={authenticationToken};");
-
-                var result = await client.SendAsync(message);
                 var doc = new HtmlDocument();
-                var contentString = await result.Content.ReadAsStringAsync();
-                doc.LoadHtml(contentString);
+                doc.LoadHtml(announcement.HtmlString);
 
                 var post = doc.DocumentNode.Descendants().Where(div => div.HasClass("box") && div.Id == "fontBox").First().Descendants().Where(div => div.Id == "hyplink-css-style").First().SelectSingleNode("div");
+                var contentString = announcement.HtmlString;
 
                 LoadMessageContent(announcement, doc, post);
                 LoadAttachments(contentString);
                 LoadReplyBox(doc, announcement.Pid);
+                LoadDeleteButton(announcement);
+            }
+            else
+            {
+                var boardID = "1048";
+
+                var verificationToken = LoginPage.VerificationToken;
+                var sessionID = LoginPage.SessionID;
+                var authenticationToken = LoginPage.AuthenticationToken;
+
+                var cookieContainer = new CookieContainer();
+
+                using (var handler = new HttpClientHandler { UseCookies = false })
+                using (var client = new HttpClient(handler) { BaseAddress = new Uri("https://iemb.hci.edu.sg") })
+                {
+                    var message = new HttpRequestMessage(HttpMethod.Get, "https://iemb.hci.edu.sg" + announcement.Url);
+                    // chinese quiz thing
+                    //var message = new HttpRequestMessage(HttpMethod.Get, $"https://iemb.hci.edu.sg/Board/content/98724?board=1048&isArchived=False");
+                    // LSS test information
+                    //var message = new HttpRequestMessage(HttpMethod.Get, $"https://iemb.hci.edu.sg/Board/content/98745?board=1048&isArchived=False");
+                    // australian math 
+                    //var message = new HttpRequestMessage(HttpMethod.Get, $"https://iemb.hci.edu.sg/Board/content/97500?board=1048&isArchived=False");
+                    // Canteen pic
+                    //var message = new HttpRequestMessage(HttpMethod.Get, $"https://iemb.hci.edu.sg/Board/content/98715?board=1048&isArchived=False");
+                    // Chinese CT mesage
+                    //var message = new HttpRequestMessage(HttpMethod.Get, $"https://iemb.hci.edu.sg/Board/content/98074?board=1048&isArchived=False");
+                    // class tshirt
+                    //var message = new HttpRequestMessage(HttpMethod.Get, $"https://iemb.hci.edu.sg/Board/content/87413?board=1048&isArchived=False");
+
+
+                    //var message = new HttpRequestMessage(HttpMethod.Get, $"https://iemb.hci.edu.sg/Board/content/97500?board=1048&isArchived=False");
+
+                    //buggy
+                    // https://iemb.hci.edu.sg/Board/content/98685?board=1048&isArchived=False (a href and strong don't work with each other)
+                    // https://iemb.hci.edu.sg/Board/content/95252?board=1048&isArchived=False (when you have a ul in a ul (WHY????????))
+
+                    message.Headers.Add("host", "iemb.hci.edu.sg");
+                    message.Headers.Add("referer", $"https://iemb.hci.edu.sg/Board/Detail/{boardID}");
+                    message.Headers.Add("user-agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Mobile Safari/537.36");
+                    message.Headers.Add("cookie", $"__RequestVerificationToken={verificationToken};ASP.NET_SessionId={sessionID}; AuthenticationToken={authenticationToken};");
+
+                    var result = await client.SendAsync(message);
+                    var contentString = await result.Content.ReadAsStringAsync();
+                    var doc = new HtmlDocument();
+                    doc.LoadHtml(contentString);
+
+                    var post = doc.DocumentNode.Descendants().Where(div => div.HasClass("box") && div.Id == "fontBox").First().Descendants().Where(div => div.Id == "hyplink-css-style").First().SelectSingleNode("div");
+                    LoadMessageContent(announcement, doc, post);
+                    LoadAttachments(contentString);
+                    LoadReplyBox(doc, announcement.Pid);
+                    LoadSaveButton(announcement, doc);
+                }
             }
         }
 
@@ -407,7 +423,7 @@ namespace iEMB.Views
                         Text = Environment.NewLine,
                     };
                 case "span":
-                    if(Regex.Replace(text, @"\s", "") == "")
+                    if (Regex.Replace(text, @"\s", "") == "")
                     {
                         return new Span
                         {
@@ -586,13 +602,13 @@ namespace iEMB.Views
             var replyContent = content.Text;
             var replySelection = ((RadioButton)radioStack.Children.Where(child => ((RadioButton)child).IsChecked).FirstOrDefault())?.Content;
 
-            if(replySelection == null)
+            if (replySelection == null)
             {
                 UserDialogs.Instance.Toast("Please select an option to reply");
                 return;
             }
 
-            if(await DisplayAlert("Alert", "This feature is currently experimental and my not work as intended. You may want to submit a reply on the actualy iEMB website to make sure. Do you want to continue?", "Yes", "No"))
+            if (await DisplayAlert("Alert", "This feature is currently experimental and my not work as intended. You may want to submit a reply on the actualy iEMB website to make sure. Do you want to continue?", "Yes", "No"))
             {
                 var postData = $"boardid=${boardID}&topic=${pid}&replyto=0&isArchived=0&UserRating=${replySelection}&replyContent=${replyContent}&PostMessage=Post+Reply";
                 var postDataByteArray = Encoding.UTF8.GetBytes(postData);
@@ -617,6 +633,53 @@ namespace iEMB.Views
             else
             {
                 UserDialogs.Instance.Toast("The reply request was cancelled");
+            }
+        }
+
+        private void LoadSaveButton(Announcement announcement, HtmlDocument document)
+        {
+            itemDelete.IsEnabled = false;
+            itemSave.Clicked += (s, e) =>
+            {
+                announcement.HtmlString = document.DocumentNode.OuterHtml;
+                SaveAnnouncement(announcement);
+            };
+        }
+
+        private void LoadDeleteButton(Announcement announcement)
+        {
+            itemSave.IsEnabled = false;
+            itemDelete.Clicked += (s, e) =>
+            {
+                DeleteAnnouncement(announcement);
+            };
+        }
+
+        private async void SaveAnnouncement(Announcement announcement)
+        {
+            var database = await AnnouncementDatabase.Instance;
+
+            if (await database.GetAnnouncementAsync(announcement.Pid) == null)
+            {
+                await database.SaveAnnouncementAsync(announcement);
+            }
+
+            UserDialogs.Instance.Toast("Successfully saved announcement!");
+        }
+
+        private async void DeleteAnnouncement(Announcement announcement)
+        {
+            var database = await AnnouncementDatabase.Instance;
+
+            try
+            {
+                await database.DeleteAnnouncementAsync(announcement);
+                UserDialogs.Instance.Toast("Successfully deleted saved announcement!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                UserDialogs.Instance.Toast("Something went wrong deleting this announcement");
             }
         }
 

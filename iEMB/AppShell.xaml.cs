@@ -11,7 +11,9 @@ namespace iEMB
         public AppShell()
         {
             InitializeComponent();
-            Routing.RegisterRoute(nameof(AnnouncementDetailPage), typeof(AnnouncementDetailPage));
+            //Routing.RegisterRoute(nameof(AnnouncementDetailPage), typeof(AnnouncementDetailPage));
+            //Routing.RegisterRoute(nameof(SavedAnnouncementPage), typeof(SavedAnnouncementPage));
+            //Routing.RegisterRoute(nameof(AnnouncementSearchPage), typeof(AnnouncementSearchPage));
         }
     }
 }

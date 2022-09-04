@@ -10,6 +10,7 @@
     </ContentPage.BindingContext>
 
     <ContentPage.ToolbarItems>
+        <ToolbarItem x:Name="itemDelete" IconImageSource="icon_delete.png"/>
         <ToolbarItem x:Name="itemSave" IconImageSource="icon_save.png"/>
         <ToolbarItem x:Name="itemStar" IconImageSource="icon_star.png"/>
     </ContentPage.ToolbarItems>
@@ -30,7 +31,7 @@
                     <StackLayout x:Name="announcementContent" Padding="0" Margin="0, 15, 0, 0" VerticalOptions="FillAndExpand">
 
                     </StackLayout>
-                    <StackLayout x:Name="replyFormStackLayout" Margin="0, 20, 0, 0" IsVisible="true">
+                    <StackLayout x:Name="replyFormStackLayout" Margin="0, 20, 0, 0" IsVisible="false">
                         <Label Text="Reply to post" TextColor="White" FontSize="Small"/>
                         <StackLayout x:Name="radioStack" Orientation="Horizontal">
                             <RadioButton x:Name="optionA" Content="A" TextColor="White" FontSize="Small"/>

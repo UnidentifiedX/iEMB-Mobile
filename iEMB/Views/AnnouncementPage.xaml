@@ -16,12 +16,6 @@
         <ToolbarItem IconImageSource="icon_logout.png" Clicked="LogoutButton_Clicked"/>
     </ContentPage.ToolbarItems>
 
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <Color x:Key="Accent">#96d1ff</Color>
-        </ResourceDictionary>
-    </ContentPage.Resources>
-
     <StackLayout>
         <ScrollView Padding="0" Margin="10, 10, 10, 10">
             <StackLayout>

@@ -36,5 +36,15 @@ namespace iEMB.Models
         {
             return Database.InsertAsync(announcement);
         }
+
+        public Task<int> DeleteAnnouncementAsync(Announcement announcement)
+        {
+            return Database.DeleteAsync(announcement);
+        }
+
+        public Task<int> DeleteAnnouncementsAsync()
+        {
+            return Database.DeleteAllAsync<Announcement>();
+        }
     }
 }

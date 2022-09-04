@@ -178,7 +178,7 @@ namespace iEMB.Views
                 
             }
 
-            Application.Current.MainPage = new LoginPage();
+            Application.Current.MainPage = new NavigationPage(new LoginPage());
         }
 
         private async void Announcement_Tapped(object sender, EventArgs e)

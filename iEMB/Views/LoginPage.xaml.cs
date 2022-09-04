@@ -141,5 +141,11 @@ namespace iEMB.Views
                 errorMsg.IsVisible = true;
             }
         }
+
+        private async void LoadSavedAnnouncements(object sender, EventArgs e)
+        {
+            //Application.Current.MainPage = new AppShell();
+            await Navigation.PushAsync(new SavedAnnouncementPage());
+        }
     }
 }
