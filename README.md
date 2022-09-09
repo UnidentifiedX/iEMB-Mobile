@@ -33,7 +33,6 @@ I'll release it on the Google Play Store when the time comes, but for now, downl
 
 *Planned Features...*
 - Pinch-to-zoom on images
-- Swipe to mark as read
 
 ### Pictures
 This is what the app looks like...
