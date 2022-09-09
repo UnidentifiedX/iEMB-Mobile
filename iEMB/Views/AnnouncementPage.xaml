@@ -21,27 +21,34 @@
             <StackLayout>
                 <Label x:Name="noUnreadAnnouncements" Text="No unread announcements. Yay!" TextColor="White" IsVisible="true" HorizontalTextAlignment="Center" Margin="0, 0, 0, 60"/>
                 <StackLayout>
-                    <StackLayout BindableLayout.ItemsSource="{Binding UnreadAnnouncements}">
+                    <StackLayout x:Name="unreadAnnouncementsStackLayout">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate>
-                                <Frame CornerRadius="10"
-                                               Padding="0">
-                                    <StackLayout BackgroundColor="Black" Padding="15, 5, 15, 5" MinimumHeightRequest="75">
-                                        <Label Text="{Binding Subject}" TextColor="White" FontAttributes="Bold" FontSize="Medium" VerticalOptions="CenterAndExpand"/>
-                                        <StackLayout Orientation="Horizontal" VerticalOptions="EndAndExpand" Margin="0, 0, 0, 5">
-                                            <Image Source="icon_calendar_user.png"/>
-                                            <Label Text="{Binding Username}" TextColor="White"/>
-                                            <Image Source="icon_calendar.png" Margin="15, 0, 0, 0"/>
-                                            <Label Text="{Binding PostDate}" TextColor="White"/>
-                                            <StackLayout Orientation="Horizontal" Margin="15, 0, 0, 0">
-                                                <Image Source="icon_attachment.png" IsVisible="{Binding HasAttatchments}"/>
-                                                <Image Source="{Binding PriorityImageSource}"/>
+                                <Frame CornerRadius="10" Padding="0">
+                                    <SwipeView>
+                                        <SwipeView.RightItems>
+                                            <SwipeItems>
+                                                <SwipeItem IconImageSource="icon_mark_as_read.png"
+                                                           BackgroundColor="Black"/>
+                                            </SwipeItems>
+                                        </SwipeView.RightItems>
+                                        <StackLayout BackgroundColor="Black" Padding="15, 5, 15, 5" MinimumHeightRequest="75">
+                                            <Label Text="{Binding Subject}" TextColor="White" FontAttributes="Bold" FontSize="Medium" VerticalOptions="CenterAndExpand"/>
+                                            <StackLayout Orientation="Horizontal" VerticalOptions="EndAndExpand" Margin="0, 0, 0, 5">
+                                                <Image Source="icon_calendar_user.png"/>
+                                                <Label Text="{Binding Username}" TextColor="White"/>
+                                                <Image Source="icon_calendar.png" Margin="15, 0, 0, 0"/>
+                                                <Label Text="{Binding PostDate}" TextColor="White"/>
+                                                <StackLayout Orientation="Horizontal" Margin="15, 0, 0, 0">
+                                                    <Image Source="icon_attachment.png" IsVisible="{Binding HasAttatchments}"/>
+                                                    <Image Source="{Binding PriorityImageSource}"/>
+                                                </StackLayout>
                                             </StackLayout>
+                                            <StackLayout.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="Announcement_Tapped"/>
+                                            </StackLayout.GestureRecognizers>
                                         </StackLayout>
-                                        <StackLayout.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="Announcement_Tapped"/>
-                                        </StackLayout.GestureRecognizers>
-                                    </StackLayout>
+                                    </SwipeView>
                                 </Frame>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
@@ -68,11 +75,11 @@
                                 </Image>
                             </StackLayout>
                         </xct:Expander.Header>
-                        <StackLayout BindableLayout.ItemsSource="{Binding ReadAnnouncements}" Margin="0, 10, 0, 0">
+                        <StackLayout x:Name="readAnnouncementsStackLayout" Margin="0, 10, 0, 0">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
                                     <Frame CornerRadius="10"
-                                               Padding="0">
+                                                Padding="0">
                                         <StackLayout BackgroundColor="Black" Padding="15, 5, 15, 5" MinimumHeightRequest="75">
                                             <Label Text="{Binding Subject}" TextColor="White" FontAttributes="Bold" FontSize="Medium" VerticalOptions="CenterAndExpand"/>
                                             <StackLayout Orientation="Horizontal" VerticalOptions="EndAndExpand" Margin="0, 0, 0, 5">

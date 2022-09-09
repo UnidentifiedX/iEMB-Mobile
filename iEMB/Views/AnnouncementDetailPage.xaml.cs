@@ -117,7 +117,7 @@ namespace iEMB.Views
                 itemStar.IconImageSource = ImageSource.FromFile("icon_star_filled.png");
             }
 
-            itemStar.Clicked += (s, e) =>
+            itemStar.Clicked += (_, __) =>
             {
                 StarAnnouncement(announcement.Pid, isStarred);
                 isStarred = !isStarred;
@@ -337,7 +337,7 @@ namespace iEMB.Views
                         };
 
                         var tapGestureRecognizer = new TapGestureRecognizer();
-                        tapGestureRecognizer.Tapped += async (s, e) =>
+                        tapGestureRecognizer.Tapped += async (_, __) =>
                         {
                             try
                             {
@@ -511,7 +511,7 @@ namespace iEMB.Views
                 });
 
                 var attachmentTappedGestureRecognizer = new TapGestureRecognizer();
-                attachmentTappedGestureRecognizer.Tapped += async (s, e) =>
+                attachmentTappedGestureRecognizer.Tapped += async (_, __) =>
                 {
                     using (var handler = new HttpClientHandler { UseCookies = false })
                     using (var client = new HttpClient(handler) { BaseAddress = new Uri("https://iemb.hci.edu.sg") })
@@ -529,7 +529,6 @@ namespace iEMB.Views
                         try
                         {
                             var path = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments);
-                            var folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Documents", "temp");
                             var filePath = Path.Combine(Directory.GetCurrentDirectory(), $"/storage/emulated/0/Download/{fileName}");
 
                             File.WriteAllBytes(filePath, fileByteArray);
@@ -564,7 +563,7 @@ namespace iEMB.Views
             };
 
             var tapGestureRecogniser = new TapGestureRecognizer();
-            tapGestureRecogniser.Tapped += (s, e) =>
+            tapGestureRecogniser.Tapped += (_, __) =>
             {
                 ReplyAnnouncement(pid);
             };
@@ -639,7 +638,7 @@ namespace iEMB.Views
         private void LoadSaveButton(Announcement announcement, HtmlDocument document)
         {
             itemDelete.IsEnabled = false;
-            itemSave.Clicked += (s, e) =>
+            itemSave.Clicked += (_, __) =>
             {
                 announcement.HtmlString = document.DocumentNode.OuterHtml;
                 SaveAnnouncement(announcement);
@@ -649,7 +648,7 @@ namespace iEMB.Views
         private void LoadDeleteButton(Announcement announcement)
         {
             itemSave.IsEnabled = false;
-            itemDelete.Clicked += (s, e) =>
+            itemDelete.Clicked += (_, __) =>
             {
                 DeleteAnnouncement(announcement);
             };

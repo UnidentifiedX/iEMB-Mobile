@@ -137,7 +137,7 @@ namespace iEMB.Views
                 BackgroundColor = backgroundColor,
             };
 
-            button.Clicked += (s, e) =>
+            button.Clicked += (s, _) =>
             {
                 StarredAnnouncements.Clear();
 

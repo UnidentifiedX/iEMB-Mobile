@@ -164,6 +164,9 @@ namespace iEMB.Views
 
                 ReadAnnouncements.Add(announcement);
             }
+
+            BindableLayout.SetItemsSource(unreadAnnouncementsStackLayout, UnreadAnnouncements);
+            BindableLayout.SetItemsSource(readAnnouncementsStackLayout, ReadAnnouncements);
         }
 
         private async void LogoutButton_Clicked(object sender, EventArgs e)
