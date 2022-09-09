@@ -109,17 +109,25 @@ namespace iEMB.Views
             var sessionID = LoginPage.SessionID;
             var authenticationToken = LoginPage.AuthenticationToken;
 
-            var isStarred = document.GetElementbyId("fav").Attributes["title"].Value == "starred message";
-            if (isStarred)
+            if(announcement.HtmlString != null)
             {
-                itemStar.IconImageSource = ImageSource.FromFile("icon_star_filled.png");
+                itemStar.IsEnabled = false;
+            }
+            else
+            {
+                var isStarred = document.GetElementbyId("fav").Attributes["title"].Value == "starred message";
+                if (isStarred)
+                {
+                    itemStar.IconImageSource = ImageSource.FromFile("icon_star_filled.png");
+                }
+
+                itemStar.Clicked += (_, __) =>
+                {
+                    StarAnnouncement(announcement.Pid, isStarred);
+                    isStarred = !isStarred;
+                };
             }
 
-            itemStar.Clicked += (_, __) =>
-            {
-                StarAnnouncement(announcement.Pid, isStarred);
-                isStarred = !isStarred;
-            };
 
             subject.Text = announcement.Subject;
             sender.Text = "From: " + announcement.Sender;
