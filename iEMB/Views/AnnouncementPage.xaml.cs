@@ -1,4 +1,5 @@
-﻿using HtmlAgilityPack;
+﻿using Acr.UserDialogs;
+using HtmlAgilityPack;
 using iEMB.Models;
 using iEMB.ViewModels;
 using Newtonsoft.Json;
@@ -205,6 +206,41 @@ namespace iEMB.Views
         private async void SearchButton_Clicked(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new AnnouncementSearchPage(unreadAnnouncements: UnreadAnnouncements, readAnnouncements: ReadAnnouncements));
+        }
+
+        private async void MarkAsRead_Invoked(object sender, EventArgs e)
+        {
+            var boardID = "1048";
+
+            var verificationToken = LoginPage.VerificationToken;
+            var sessionID = LoginPage.SessionID;
+            var authenticationToken = LoginPage.AuthenticationToken;
+
+            var announcement = (Announcement)((SwipeItem)sender).BindingContext;
+            var cookieContainer = new CookieContainer();
+
+            using (var handler = new HttpClientHandler { UseCookies = false })
+            using (var client = new HttpClient(handler) { BaseAddress = new Uri("https://iemb.hci.edu.sg") })
+            {
+                var message = new HttpRequestMessage(HttpMethod.Get, "https://iemb.hci.edu.sg" + announcement.Url);
+
+                message.Headers.Add("host", "iemb.hci.edu.sg");
+                message.Headers.Add("referer", $"https://iemb.hci.edu.sg/Board/Detail/{boardID}");
+                message.Headers.Add("user-agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Mobile Safari/537.36");
+                message.Headers.Add("cookie", $"__RequestVerificationToken={verificationToken};ASP.NET_SessionId={sessionID}; AuthenticationToken={authenticationToken};");
+
+                var result = await client.SendAsync(message);
+
+                if (result.IsSuccessStatusCode)
+                {
+                    GetAnnouncements(verificationToken, sessionID, authenticationToken);
+                    UserDialogs.Instance.Toast("Marked announcement as read");
+                }
+                else
+                {
+                    UserDialogs.Instance.Toast("Something went wrong marking the announcement as read");
+                }
+            }
         }
     }
 }

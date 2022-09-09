@@ -60,8 +60,6 @@ namespace iEMB.Views
                 var sessionID = LoginPage.SessionID;
                 var authenticationToken = LoginPage.AuthenticationToken;
 
-                var cookieContainer = new CookieContainer();
-
                 using (var handler = new HttpClientHandler { UseCookies = false })
                 using (var client = new HttpClient(handler) { BaseAddress = new Uri("https://iemb.hci.edu.sg") })
                 {

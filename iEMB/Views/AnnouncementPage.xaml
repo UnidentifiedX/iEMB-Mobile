@@ -29,7 +29,8 @@
                                         <SwipeView.RightItems>
                                             <SwipeItems>
                                                 <SwipeItem IconImageSource="icon_mark_as_read.png"
-                                                           BackgroundColor="Black"/>
+                                                           BackgroundColor="Black"
+                                                           Invoked="MarkAsRead_Invoked"/>
                                             </SwipeItems>
                                         </SwipeView.RightItems>
                                         <StackLayout BackgroundColor="Black" Padding="15, 5, 15, 5" MinimumHeightRequest="75">
