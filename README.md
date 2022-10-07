@@ -1,3 +1,5 @@
+<img src="https://github.com/UnidentifiedX/iEMB-Mobile/blob/master/Images/logo.png?raw=true" alt="iemb mobile logo">
+
 ## iEMB Mobile
 Mobile client for Hwa Chong Institution's [Integrated e-Message Board (iEMB)](https://iemb.hci.edu.sg).
 
