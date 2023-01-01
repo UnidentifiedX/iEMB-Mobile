@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:iEMB.ViewModels"
              x:Class="iEMB.Views.SettingsPage"
              BackgroundColor="#1a1a1a"
              Title="Settings">
@@ -29,6 +30,7 @@
                     <TapGestureRecognizer Tapped="EmailOwner_Tapped"/>
                 </StackLayout.GestureRecognizers>
             </StackLayout>
+            <Label Text="{Binding CopyrightText}" TextColor="White" Margin="0, 0, 0, 10" HorizontalOptions="CenterAndExpand" VerticalOptions="EndAndExpand"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

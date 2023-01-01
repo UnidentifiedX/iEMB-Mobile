@@ -1,4 +1,5 @@
 ﻿using Acr.UserDialogs;
+using iEMB.ViewModels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -21,6 +22,7 @@ namespace iEMB.Views
         public SettingsPage()
         {
             InitializeComponent();
+            BindingContext = new SettingsViewModel();
 
             RetrieveAutoUpdatePreference();
         }
