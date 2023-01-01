@@ -1,7 +1,10 @@
 ﻿using Acr.UserDialogs;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
@@ -73,6 +76,31 @@ namespace iEMB.Views
             AutoUpdate = !AutoUpdate;
 
             await SecureStorage.SetAsync("autoupdate", AutoUpdate.ToString().ToLower());
+        }
+
+        private async void CheckForUpdates_Clicked(object sender, EventArgs e)
+        {
+            var appVersion = VersionTracking.CurrentVersion;
+            
+            var client = new HttpClient();
+            var response = await client.GetAsync("https://api.github.com/repos/unidentifiedx/iemb-mobile/releases/latest");
+
+            var json = JObject.Parse(await response.Content.ReadAsStringAsync());
+            var latestVersion = (string)json["name"];
+
+            if(latestVersion != appVersion)
+            {
+                var redirect = await DisplayAlert("New Version Found!", "A new version of the app has been found. Open link to download?", "Yes", "No");
+
+                if(redirect)
+                {
+                    await Browser.OpenAsync("https://github.com/UnidentifiedX/iEMB-Mobile/releases/latest");
+                }
+            }
+            else
+            {
+                await DisplayAlert("No New Version Found", "There is no new version found for the app. You're up to date!", "Nice");
+            }
         }
     }
 }

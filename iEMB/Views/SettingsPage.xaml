@@ -9,7 +9,7 @@
             <StackLayout Orientation="Horizontal">
                 <Label Text="Auto Update" FontSize="Small" TextColor="White" HorizontalOptions="Start" VerticalOptions="CenterAndExpand"/>
                 <Switch x:Name="autoUpdateSwitch" Toggled="AutoUpdateSwitch_Toggled" OnColor="Red"/>
-                <Button Text="Check for Updates" Padding="10, 0, 10, 0" Margin="0, 0, 15, 0" CornerRadius="10" HorizontalOptions="EndAndExpand"/>
+                <Button Clicked="CheckForUpdates_Clicked" Text="Check for Updates" Padding="10, 0, 10, 0" Margin="0, 0, 15, 0" CornerRadius="10" HorizontalOptions="EndAndExpand"/>
             </StackLayout>
             <StackLayout Orientation="Horizontal">
                 <Label Text="Report a Bug (GitHub Issue)" TextColor="White"/>

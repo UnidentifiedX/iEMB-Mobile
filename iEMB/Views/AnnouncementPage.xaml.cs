@@ -25,6 +25,7 @@ namespace iEMB.Views
     {
         protected override void OnAppearing()
         {
+            VersionTracking.Track();
             GetAnnouncements(LoginPage.VerificationToken, LoginPage.SessionID, LoginPage.AuthenticationToken);
         }
 
