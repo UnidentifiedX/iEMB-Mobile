@@ -12,9 +12,11 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Xamarin.CommunityToolkit.Effects;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -123,7 +125,7 @@ namespace iEMB.Views
                     itemStar.IconImageSource = ImageSource.FromFile("icon_star_filled.png");
                 }
 
-                itemStar.Clicked += (_, __) =>
+                itemStar.Clicked += (s, e) =>
                 {
                     StarAnnouncement(announcement.Pid, isStarred);
                     isStarred = !isStarred;
@@ -253,24 +255,40 @@ namespace iEMB.Views
                                 var src = node.Attributes["src"].Value;
 
                                 Image image;
+                                byte[] bytes;
                                 if (src.StartsWith("http"))
                                 {
-                                    image = new Image()
+                                    using (var wc = new WebClient())
                                     {
-                                        Source = new Uri(src),
-                                        Margin = new Thickness(0, 15, 0, 0),
-                                    };
+                                        bytes = wc.DownloadData(src);
+                                    }
                                 }
                                 else
                                 {
-                                    var bytes = Convert.FromBase64String(Regex.Replace(src, @"data:image/.+?;base64,", ""));
-                                    image = new Image()
-                                    {
-                                        Source = ImageSource.FromStream(() => new MemoryStream(bytes)),
-                                        Margin = new Thickness(0, 15, 0, 0)
-                                    };
+                                    bytes = Convert.FromBase64String(Regex.Replace(src, @"data:image/.+?;base64,", ""));
                                 }
 
+                                image = new Image()
+                                {
+                                    Source = ImageSource.FromStream(() => new MemoryStream(bytes)),
+                                    Margin = new Thickness(0, 15, 0, 0)
+                                };
+
+                                var touchEffect = new TouchEffect();
+                                touchEffect.Completed += async (s, e) =>
+                                {
+                                    var fn = string.Join("_", announcement.Subject.Split(Path.GetInvalidFileNameChars())) + ".png";
+                                    var file = Path.Combine(FileSystem.CacheDirectory, fn);
+                                    File.WriteAllBytes(file, bytes);
+
+                                    await Share.RequestAsync(new ShareFileRequest
+                                    {
+                                        Title = "Share Image",
+                                        File = new ShareFile(file),
+                                    });
+                                };
+
+                                image.Effects.Add(touchEffect);
                                 announcementContent.Children.Add(image);
                             }
                             catch (Exception)
@@ -345,7 +363,7 @@ namespace iEMB.Views
                         };
 
                         var tapGestureRecognizer = new TapGestureRecognizer();
-                        tapGestureRecognizer.Tapped += async (_, __) =>
+                        tapGestureRecognizer.Tapped += async (s, e) =>
                         {
                             try
                             {
@@ -519,7 +537,7 @@ namespace iEMB.Views
                 });
 
                 var attachmentTappedGestureRecognizer = new TapGestureRecognizer();
-                attachmentTappedGestureRecognizer.Tapped += async (_, __) =>
+                attachmentTappedGestureRecognizer.Tapped += async (s, e) =>
                 {
                     using (var handler = new HttpClientHandler { UseCookies = false })
                     using (var client = new HttpClient(handler) { BaseAddress = new Uri("https://iemb.hci.edu.sg") })
@@ -571,7 +589,7 @@ namespace iEMB.Views
             };
 
             var tapGestureRecogniser = new TapGestureRecognizer();
-            tapGestureRecogniser.Tapped += (_, __) =>
+            tapGestureRecogniser.Tapped += (s, e) =>
             {
                 ReplyAnnouncement(pid);
             };
@@ -646,7 +664,7 @@ namespace iEMB.Views
         private void LoadSaveButton(Announcement announcement, HtmlDocument document)
         {
             itemDelete.IsEnabled = false;
-            itemSave.Clicked += (_, __) =>
+            itemSave.Clicked += (s, e) =>
             {
                 announcement.HtmlString = document.DocumentNode.OuterHtml;
                 SaveAnnouncement(announcement);
@@ -656,7 +674,7 @@ namespace iEMB.Views
         private void LoadDeleteButton(Announcement announcement)
         {
             itemSave.IsEnabled = false;
-            itemDelete.Clicked += (_, __) =>
+            itemDelete.Clicked += (s, e) =>
             {
                 DeleteAnnouncement(announcement);
             };
