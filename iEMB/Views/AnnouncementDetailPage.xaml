@@ -12,6 +12,7 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem x:Name="itemDelete" IconImageSource="icon_delete.png"/>
         <ToolbarItem x:Name="itemSave" IconImageSource="icon_save.png"/>
+        <ToolbarItem x:Name="itemShare" IconImageSource="icon_share.png"/>
         <ToolbarItem x:Name="itemStar" IconImageSource="icon_star.png"/>
     </ContentPage.ToolbarItems>
     

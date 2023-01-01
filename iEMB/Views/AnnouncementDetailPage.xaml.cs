@@ -22,7 +22,6 @@ namespace iEMB.Views
 {
     public partial class AnnouncementDetailPage : ContentPage
     {
-
         private static FormattedString FormattedString = new FormattedString();
 
         public AnnouncementDetailPage()
@@ -63,7 +62,8 @@ namespace iEMB.Views
                 using (var handler = new HttpClientHandler { UseCookies = false })
                 using (var client = new HttpClient(handler) { BaseAddress = new Uri("https://iemb.hci.edu.sg") })
                 {
-                    var message = new HttpRequestMessage(HttpMethod.Get, "https://iemb.hci.edu.sg" + announcement.Url);
+                    var url = "https://iemb.hci.edu.sg" + announcement.Url;
+                    var message = new HttpRequestMessage(HttpMethod.Get, url);
                     // chinese quiz thing
                     //var message = new HttpRequestMessage(HttpMethod.Get, $"https://iemb.hci.edu.sg/Board/content/98724?board=1048&isArchived=False");
                     // LSS test information
@@ -95,10 +95,12 @@ namespace iEMB.Views
                     doc.LoadHtml(contentString);
 
                     var post = doc.DocumentNode.Descendants().Where(div => div.HasClass("box") && div.Id == "fontBox").First().Descendants().Where(div => div.Id == "hyplink-css-style").First().SelectSingleNode("div");
+
                     LoadMessageContent(announcement, doc, post);
                     LoadAttachments(contentString);
                     LoadReplyBox(doc, announcement.Pid);
                     LoadSaveButton(announcement, doc);
+                    LoadShareButton(url);
                 }
             }
         }
@@ -657,6 +659,18 @@ namespace iEMB.Views
             itemDelete.Clicked += (_, __) =>
             {
                 DeleteAnnouncement(announcement);
+            };
+        }
+
+        private void LoadShareButton(string url)
+        {
+            itemShare.Clicked += async (s, e) =>
+            {
+                await Share.RequestAsync(new ShareTextRequest
+                {
+                    Uri = url,
+                    Title = "Share iEMB Post"
+                });
             };
         }
 
