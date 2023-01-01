@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="iEMB.Views.SettingsPage"
+             BackgroundColor="#1a1a1a"
+             Title="Settings">
+    <ContentPage.Content>
+        <StackLayout Margin="10, 0, 0, 0">
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Auto Update" FontSize="Small" TextColor="White" HorizontalOptions="Start" VerticalOptions="CenterAndExpand"/>
+                <Switch x:Name="autoUpdateSwitch" Toggled="AutoUpdateSwitch_Toggled" OnColor="Red"/>
+                <Button Text="Check for Updates" Padding="10, 0, 10, 0" Margin="0, 0, 15, 0" CornerRadius="10" HorizontalOptions="EndAndExpand"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Report a Bug (GitHub Issue)" TextColor="White"/>
+                <Image Source="icon_bug_report.png"/>
+                <Image Source="icon_launch.png"/>
+
+                <StackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="ReportBug_Tapped"/>
+                </StackLayout.GestureRecognizers>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Contact the Owner (Email)" TextColor="White"/>
+                <Image Source="icon_email.png"/>
+                <Image Source="icon_launch.png"/>
+
+                <StackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="EmailOwner_Tapped"/>
+                </StackLayout.GestureRecognizers>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

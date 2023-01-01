@@ -32,6 +32,7 @@
     <TabBar>
         <ShellContent Title="Announcements" Icon="icon_about.png" Route="AboutPage" ContentTemplate="{DataTemplate local:AnnouncementPage}" />
         <ShellContent Title="Starred" Icon="icon_star.png" ContentTemplate="{DataTemplate local:FavouritePage}" />
+        <ShellContent Title="Settings" Icon="icon_settings.png" ContentTemplate="{DataTemplate local:SettingsPage}"/>
     </TabBar>
 
     <!--
