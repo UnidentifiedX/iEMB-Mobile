@@ -7,11 +7,11 @@ namespace iEMB.ViewModels
 {
     public class SettingsViewModel : BaseViewModel
     {
-        public string CopyrightText { get; } = $"Version {VersionTracking.CurrentVersion}. © 2023 UnidentifiedX.";
+        public string CopyrightText { get; } = $"Version {VersionTracking.CurrentVersion}. © {DateTime.Now.Year} UnidentifiedX.";
 
         public SettingsViewModel()
         {
-            //CopyrightText = $"iEMB Mobile {VersionTracking.CurrentVersion}. Copyright 2023 UnidentifiedX.";
+            
         }
     }
 }

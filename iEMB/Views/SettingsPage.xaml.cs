@@ -51,15 +51,10 @@ namespace iEMB.Views
         {
             try
             {
-                var message = new EmailMessage
-                {
-                    To = new List<string>()
-                    {
-                        "211530w@student.hci.edu.sg"
-                    }
-                };
+                var email = "211530w@student.hci.edu.sg";
+                var uri = $"mailto:{email}";
 
-                await Email.ComposeAsync(message);
+                await Launcher.OpenAsync(uri);
             }
             catch (FeatureNotSupportedException ex)
             {
