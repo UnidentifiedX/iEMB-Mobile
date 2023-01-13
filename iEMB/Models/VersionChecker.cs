@@ -10,12 +10,17 @@ namespace iEMB.Models
 {
     public static class VersionChecker
     {
+        private static bool _isInitializedPrior = false;
+
         public static async void InitializeVersionChecker()
         {
             VersionTracking.Track();
 
+            if (_isInitializedPrior) return;
+
             LatestVersion = await GetLatestVersion();
             IsAutoUpdatePreference = await GetAutoUpdatePreference();
+            IsInitializedPrior = true;
         }
 
         private static async Task<string> GetLatestVersion()
@@ -45,5 +50,17 @@ namespace iEMB.Models
             }
         }
         public static bool IsAutoUpdatePreference { get; private set; }
+        public static bool IsInitializedPrior
+        {
+            get
+            {
+                return _isInitializedPrior;
+            }
+            
+            private set
+            {
+                _isInitializedPrior = value;
+            }
+        }
     }
 }
