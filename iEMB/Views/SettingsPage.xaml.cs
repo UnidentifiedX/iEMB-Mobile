@@ -1,4 +1,5 @@
 ﻿using Acr.UserDialogs;
+using iEMB.Models;
 using iEMB.ViewModels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -17,7 +18,7 @@ namespace iEMB.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SettingsPage : ContentPage
     {
-        private bool AutoUpdate;
+        private bool AutoUpdate = VersionChecker.IsAutoUpdatePreference;
 
         public SettingsPage()
         {
@@ -27,12 +28,9 @@ namespace iEMB.Views
             RetrieveAutoUpdatePreference();
         }
 
-        private async void RetrieveAutoUpdatePreference()
+        private void RetrieveAutoUpdatePreference()
         {
-            var autoUpdate = (await SecureStorage.GetAsync("autoupdate")) == "true";
-
-            autoUpdateSwitch.IsToggled = autoUpdate;
-            AutoUpdate = autoUpdate;
+            autoUpdateSwitch.IsToggled = AutoUpdate;
         }
 
         private async void ReportBug_Tapped(object sender, EventArgs e)
@@ -77,15 +75,7 @@ namespace iEMB.Views
 
         private async void CheckForUpdates_Clicked(object sender, EventArgs e)
         {
-            var appVersion = VersionTracking.CurrentVersion;
-            
-            var client = new HttpClient();
-            var response = await client.GetAsync("https://api.github.com/repos/unidentifiedx/iemb-mobile/releases/latest");
-
-            var json = JObject.Parse(await response.Content.ReadAsStringAsync());
-            var latestVersion = (string)json["name"];
-
-            if(latestVersion != appVersion)
+            if(!VersionChecker.IsLatestVersion)
             {
                 var redirect = await DisplayAlert("New Version Found!", "A new version of the app has been found. Open link to download?", "Yes", "No");
 

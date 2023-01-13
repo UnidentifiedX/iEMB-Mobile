@@ -3,7 +3,6 @@ using HtmlAgilityPack;
 using iEMB.Models;
 using iEMB.ViewModels;
 using Newtonsoft.Json;
-using PuppeteerSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,7 +24,7 @@ namespace iEMB.Views
     {
         protected override void OnAppearing()
         {
-            VersionTracking.Track();
+            VersionChecker.InitializeVersionChecker();
             GetAnnouncements(LoginPage.VerificationToken, LoginPage.SessionID, LoginPage.AuthenticationToken);
         }
 
@@ -37,6 +36,16 @@ namespace iEMB.Views
 
         private async void GetAnnouncements(string verificationToken, string sessionID, string authenticationToken)
         {
+            if(VersionChecker.IsAutoUpdatePreference && !VersionChecker.IsLatestVersion)
+            {
+                var redirect = await DisplayAlert("New Version Found!", "A new version of the app has been found. Open link to download?", "Yes", "No");
+
+                if (redirect)
+                {
+                    await Browser.OpenAsync("https://github.com/UnidentifiedX/iEMB-Mobile/releases/latest");
+                }
+            }
+
             var request = (HttpWebRequest)WebRequest.Create("https://iemb.hci.edu.sg/Board/Detail/1048");
             var cookieContainer = new CookieContainer();
             cookieContainer.Add(new Uri("https://iemb.hci.edu.sg/Board/Detail/1048"), new Cookie("__RequestVerificationToken", verificationToken));
