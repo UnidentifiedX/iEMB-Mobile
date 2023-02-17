@@ -22,6 +22,9 @@ namespace iEMB.Views
 {
     public partial class AnnouncementPage : ContentPage
     {
+        public static ObservableCollection<Announcement> UnreadAnnouncements = new ObservableCollection<Announcement>();
+        public static ObservableCollection<Announcement> ReadAnnouncements = new ObservableCollection<Announcement>();
+
         protected override void OnAppearing()
         {
             VersionChecker.InitializeVersionChecker();
@@ -94,8 +97,8 @@ namespace iEMB.Views
                             Pid = Regex.Match(data[2].SelectSingleNode("a").Attributes["href"].Value, @"/Board/content/(\d+)").Groups[1].Value,
                             Priority = data[3].SelectSingleNode("img").Attributes["alt"].Value,
                             Recepients = Regex.Replace(data[4].InnerText.Trim(), @"\s", " ").Trim(),
-                            ViewCount = int.Parse(Regex.Match(data[5].InnerText, @"Viewer:\s+(\d+)").Groups[1].Value),
-                            ReplyCount = int.Parse(Regex.Match(data[5].InnerText, @"Response:\s+(\d+)").Groups[1].Value),
+                            ViewCount = int.TryParse(Regex.Match(data[5].InnerText, @"Viewer:\s+(\d+)").Groups[1].Value, out var v) ? v : 0,
+                            ReplyCount = int.TryParse(Regex.Match(data[5].InnerText, @"Response:\s+(\d+)").Groups[1].Value, out var r) ? r : 0,
                             IsRead = false,
                             HasAttatchments = data[2].SelectSingleNode("i") != null 
                         };
@@ -119,8 +122,8 @@ namespace iEMB.Views
                         Pid = Regex.Match(data[2].SelectSingleNode("a").Attributes["href"].Value, @"/Board/content/(\d+)").Groups[1].Value,
                         Priority = data[3].SelectSingleNode("img").Attributes["alt"].Value,
                         Recepients = Regex.Replace(data[4].InnerText.Trim(), @"\s", " ").Trim(),
-                        ViewCount = int.Parse(Regex.Match(data[5].InnerText, @"Viewer:\s+(\d+)").Groups[1].Value),
-                        ReplyCount = int.Parse(Regex.Match(data[5].InnerText, @"Response:\s+(\d+)").Groups[1].Value),
+                        ViewCount = int.TryParse(Regex.Match(data[5].InnerText, @"Viewer:\s+(\d+)").Groups[1].Value, out var v) ? v : 0,
+                        ReplyCount = int.TryParse(Regex.Match(data[5].InnerText, @"Response:\s+(\d+)").Groups[1].Value, out var r) ? r : 0,
                         IsRead = true,
                         HasAttatchments = data[2].SelectSingleNode("i") != null,
                     };
@@ -131,9 +134,6 @@ namespace iEMB.Views
 
             LoadAnnouncements(readAnnouncements, unreadAnnouncements);
         }
-
-        public static ObservableCollection<Announcement> UnreadAnnouncements = new ObservableCollection<Announcement>();
-        public static ObservableCollection<Announcement> ReadAnnouncements = new ObservableCollection<Announcement>();
 
         private void LoadAnnouncements(List<Announcement> readAnnouncements, List<Announcement> unreadAnnouncements)
         {
